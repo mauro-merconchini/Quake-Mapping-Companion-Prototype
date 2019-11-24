@@ -14,6 +14,10 @@ import java.io.IOException;
 
 public class QuakeMappingCompanion extends PApplet {
 
+
+//Initialize an array of strings that will hold the .map file line by line
+String mapFileLines[];
+
 public void setup()
 {
     //This makes sure that the window can be resized, both in 2D and 3D
@@ -21,11 +25,15 @@ public void setup()
 
     //Initialize a 3D window for text and graphics to be displayed
     
+
+    mapFileLines = loadStrings("endofsolace.map");
 }
 
 public void draw()
 {
+    println(mapFileLines[6]);
 
+    noLoop();
 }
   public void settings() {  size(800, 600, P3D); }
   static public void main(String[] passedArgs) {
