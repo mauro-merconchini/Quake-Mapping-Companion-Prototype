@@ -15,5 +15,11 @@ void setup()
 
 void draw()
 {
-    noLoop();
+    cls();
+}
+
+//A simple method to clear the screen on each frame, avoid ghosting
+void cls()
+{
+    background(0);
 }

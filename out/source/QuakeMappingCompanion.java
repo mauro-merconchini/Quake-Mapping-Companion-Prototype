@@ -31,9 +31,15 @@ public void setup()
 
 public void draw()
 {
-    println(mapFileLines[6]);
+    cls();
 
-    noLoop();
+    text("Hello World!", 100, 100);
+}
+
+//A simple method to clear the screen on each frame, avoid ghosting
+public void cls()
+{
+    background(0);
 }
   public void settings() {  size(800, 600, P3D); }
   static public void main(String[] passedArgs) {
