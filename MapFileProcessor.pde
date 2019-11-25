@@ -1,14 +1,41 @@
 class MapFileProcessor
 {
     String mapFilePath;
+    String mapFileLines[];
 
-    MapFileProcessor (String filePath)
-    {
-        mapFilePath = filePath;
-    }
+    boolean fileLoaded;
+    boolean fileValidated;
 
-    String toString()
+    //Empty constructor
+    MapFileProcessor() {}
+
+    //Prints the path of the map file
+    String mapPath()
     {
         return mapFilePath;
+    }
+
+    //Takes care of loading the file, calling a validating helper method, and writing the array of lines
+    void loadFile(String path)
+    {
+        mapFilePath = path;
+        fileLoaded = true;
+        mapFileLines = loadStrings(mapFilePath);
+
+        validateFile();
+    }
+
+    //Make sure that the input file is a valid map file
+    void validateFile()
+    {
+        //Check that the file path shows the correct file extension
+        if (mapFilePath.substring(mapFilePath.length() - 4).equals(".map"))
+        {
+            //Check that the map file actually comes from a Trenchbroom Quake map file
+            if (mapFileLines[0].equals("// Game: Quake"))
+            {
+                fileValidated = true;
+            }
+        }
     }
 }

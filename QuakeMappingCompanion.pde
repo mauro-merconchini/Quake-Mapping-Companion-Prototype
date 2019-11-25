@@ -15,8 +15,7 @@ void setup()
 
     selectInput("Select a .map file to process", "fileSelected");
 
-    //Populate the array of strings with the lines of the map file
-    //mapFileLines = loadStrings(mapFileLocation);
+    mapProcessor = new MapFileProcessor();
 }
 
 //Will update once per frame, place your drawing routines here
@@ -25,8 +24,30 @@ void draw()
     cls();
     fontSetup();
 
-    textAlign(CENTER);
-    text("MAIN WINDOW", width/8, height/8, width-width/5, height-height/5);
+    //Only run the following code if a file has been loaded
+    if (mapProcessor.fileLoaded)
+    {
+        //Only run the following code if the file has been validated to be a Trenchbroom Quake map file
+        if (mapProcessor.fileValidated)
+        {
+            textAlign(CENTER);
+            text("FILE VALIDATED!", width/8, height/8, width-width/5, height-height/5);
+        }
+
+        //The file must have loaded, but failed the verification
+        else
+        {
+            textAlign(CENTER);
+            text("FILE NOT VALIDATED!", width/8, height/8, width-width/5, height-height/5);
+        }
+    }
+
+    //No file has been loaded, or the file loaded was not a map file
+    else
+    {
+        textAlign(CENTER);
+        text("NO MAP FILE LOADED!", width/8, height/8, width-width/5, height-height/5);
+    }
 }
 
 //This method will be run once the file selection dialog is closed
@@ -46,7 +67,7 @@ void fileSelected(File selection)
     {
         println("User selected " + selection.getAbsolutePath());
 
-        //Create the object that will take care of processign the map file, feed it the file's path as an input
-        mapProcessor = new MapFileProcessor(selection.getAbsolutePath());
+        //Load the map file into the processor object
+        mapProcessor.loadFile(selection.getAbsolutePath());
     }
 }
