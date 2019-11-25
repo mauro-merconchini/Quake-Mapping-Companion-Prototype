@@ -3,6 +3,8 @@ import processing.data.*;
 import processing.event.*; 
 import processing.opengl.*; 
 
+import java.util.Stack; 
+
 import java.util.HashMap; 
 import java.util.ArrayList; 
 import java.io.File; 
@@ -46,7 +48,9 @@ public void draw()
         //Only run the following code if the file has been validated to be a Trenchbroom Quake map file
         if (mapProcessor.fileValidated)
         {
-            
+            //println(frameRate);
+
+            noLoop();
         }
 
         //The file must have loaded, but failed the verification
@@ -85,9 +89,25 @@ public void fileSelected(File selection)
         //Load the map file into the processor object
         mapProcessor.loadFile(selection.getAbsolutePath());
 
-        mapProcessor.processFile();
+        mapProcessor.processMapFile();
     }
 }
+class Brush
+{
+    PVector verts[];
+    String texture;
+
+    boolean isWorldSpawn;
+    boolean isEntity;
+
+    
+}
+class Entity
+{
+    
+}
+
+
 class MapFileProcessor
 {
     String mapFilePath;
@@ -96,8 +116,10 @@ class MapFileProcessor
     boolean fileLoaded;
     boolean fileValidated;
 
+    ArrayList<Brush> brushList;
+
     //Empty constructor
-    MapFileProcessor() {}
+    MapFileProcessor() { brushList = new ArrayList<Brush>(); }
 
     //Prints the path of the map file
     public String mapPath()
@@ -128,21 +150,65 @@ class MapFileProcessor
             }
         }
     }
-
-    public void processFile()
-    {
-        processBrushes();
-    }
     
-    public void processBrushes()
+    public void processMapFile()
     {
+        println(mapFileLines[3]);
+
+        //rawScan();
+    }
+
+    public void rawScan()
+    {
+        int curlyStart = 0;
+        int curlyEnd = 0;
+
+        Stack curlyStack = new Stack();
+
+        int entityCount = 0;
+
         for (int i = 0; i < mapFileLines.length; i++)
         {
-            if (mapFileLines[i].contains("brush"))
+            System.out.printf("i = %d\n", i);
+
+            if (mapFileLines[i].equals("{") && mapFileLines[i - 1].contains("// entity"))
             {
-                println("Brush at line " + i);
+                System.out.printf("i - 1 = %d\n", i);
+                curlyStart = i;
+                System.out.printf("pushed at %d\n", i);
+                curlyStack.push(i);
+            }
+
+            else if (mapFileLines[i].equals("{"))
+            {
+                System.out.printf("pushed at %d\n", i);
+                curlyStack.push(i);
+            }
+
+            else if (mapFileLines[i].equals("}"))
+            {
+                System.out.printf("popped at %d\n", i);
+                curlyStack.pop();
+
+                if (curlyStack.empty())
+                {
+                    System.out.printf("stack now empty at %d\n", i);
+                    curlyEnd = i;
+
+                    println("Entity start:\t\t" + curlyStart + "\t\tEntity end:\t\t" + curlyEnd);
+
+                    entityCount++;
+                }
+            }
+
+            if (entityCount != 0)
+            {
+                break;
             }
         }
+
+        println(curlyStack);
+        println("\nTotal Entities: " + entityCount);
     }
 }
 //A simple method to clear the screen on each frame, avoid ghosting

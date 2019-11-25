@@ -1,3 +1,5 @@
+import java.util.Stack;
+
 class MapFileProcessor
 {
     String mapFilePath;
@@ -6,8 +8,10 @@ class MapFileProcessor
     boolean fileLoaded;
     boolean fileValidated;
 
+    ArrayList<Brush> brushList;
+
     //Empty constructor
-    MapFileProcessor() {}
+    MapFileProcessor() { brushList = new ArrayList<Brush>(); }
 
     //Prints the path of the map file
     String mapPath()
@@ -39,19 +43,63 @@ class MapFileProcessor
         }
     }
     
-    void processFile()
+    void processMapFile()
     {
-        processBrushes();
+        println(mapFileLines[3]);
+
+        //rawScan();
     }
-    
-    void processBrushes()
+
+    void rawScan()
     {
+        int curlyStart = 0;
+        int curlyEnd = 0;
+
+        Stack curlyStack = new Stack();
+
+        int entityCount = 0;
+
         for (int i = 0; i < mapFileLines.length; i++)
         {
-            if (mapFileLines[i].contains("brush"))
+            System.out.printf("i = %d\n", i);
+
+            if (mapFileLines[i].equals("{") && mapFileLines[i - 1].contains("// entity"))
             {
-                println("Brush at line " + i);
+                System.out.printf("i - 1 = %d\n", i);
+                curlyStart = i;
+                System.out.printf("pushed at %d\n", i);
+                curlyStack.push(i);
+            }
+
+            else if (mapFileLines[i].equals("{"))
+            {
+                System.out.printf("pushed at %d\n", i);
+                curlyStack.push(i);
+            }
+
+            else if (mapFileLines[i].equals("}"))
+            {
+                System.out.printf("popped at %d\n", i);
+                curlyStack.pop();
+
+                if (curlyStack.empty())
+                {
+                    System.out.printf("stack now empty at %d\n", i);
+                    curlyEnd = i;
+
+                    println("Entity start:\t\t" + curlyStart + "\t\tEntity end:\t\t" + curlyEnd);
+
+                    entityCount++;
+                }
+            }
+
+            if (entityCount != 0)
+            {
+                break;
             }
         }
+
+        println(curlyStack);
+        println("\nTotal Entities: " + entityCount);
     }
 }
