@@ -3,8 +3,6 @@ import processing.data.*;
 import processing.event.*; 
 import processing.opengl.*; 
 
-import drop.*; 
-
 import java.util.HashMap; 
 import java.util.ArrayList; 
 import java.io.File; 
@@ -16,19 +14,15 @@ import java.io.IOException;
 
 public class QuakeMappingCompanion extends PApplet {
 
-//Library responsible for the file drag-n-drop functionality
-
-
-//String mapFileLocation;
-
 //Initialize an array of strings that will hold the map file line by line
 String mapFileLines[];
+
+String mapFileLocation;
 
 //Initialize a font object that will be used to load the custom font
 PFont alata;
 
-//Initialize an object that will handle drag-n-drop
-SDrop drop;
+MapFileProcessor mapProcessor;
 
 public void setup()
 {
@@ -38,10 +32,10 @@ public void setup()
     //Initialize a 3D window for text and graphics to be displayed
     
 
-    drop = new SDrop(this);
+    selectInput("Select a .map file to process", "fileSelected");
 
     //Populate the array of strings with the lines of the map file
-    //mapFileLines = loadStrings("data/endofsolace.map");
+    //mapFileLines = loadStrings(mapFileLocation);
 }
 
 public void draw()
@@ -49,62 +43,56 @@ public void draw()
     cls();
     fontSetup();
 
-    //awaitFile();
-    
     textAlign(CENTER);
-    text("drag and drop your map file!", width/8, height/8, width-width/5, height-height/5);
-
-    noLoop();
+    text("MAIN WINDOW", width/8, height/8, width-width/5, height-height/5);
 }
 
+public void fileSelected(File selection) 
+{
+    if (selection == null) 
+    {
+        println("Window was closed or the user hit cancel.");
+    } 
+
+    else 
+    {
+        println("User selected " + selection.getAbsolutePath());
+
+        mapFileLocation = selection.getAbsolutePath();
+
+        mapProcessor = new MapFileProcessor(selection.getAbsolutePath());
+
+        println(mapProcessor.toString());
+    }
+}
+class MapFileProcessor
+{
+    String mapFilePath;
+
+    MapFileProcessor (String filePath)
+    {
+        mapFilePath = filePath;
+    }
+
+    public String toString()
+    {
+        return mapFilePath;
+    }
+}
 //A simple method to clear the screen on each frame, avoid ghosting
 public void cls()
 {
     background(0);
 }
 
+//This sets up the font that will be used for displaying text
 public void fontSetup()
 {
     //Load the font used for writing text
-    alata = createFont("Alata-Regular.ttf", width/10);
+    alata = createFont("data/Alata-Regular.ttf", width/10);
     textFont(alata);
 }
-
-public void dropEvent(DropEvent theDropEvent) 
-{
-    mapFileLines = loadStrings(theDropEvent.file());
-    writeFile();
-
-    AnotherWindow test = (theDropEvent.file().toString());
-
-    test.draw();
-}
-
-public void writeFile()
-{
-    println(mapFileLines);
-}
-class AnotherWindow
-{
-    String mapFilePath;
-
-    AnotherWindow(String path)
-    {
-        mapFilePath = path;
-    }
-
-    public void setup()
-    {
-        background(125);
-        size(100, 200, P3D);
-    }
-
-    public void draw()
-    {
-        ellipse(width/2, height/2, width/2, height/2);
-    }
-}
-  public void settings() {  size(800, 600); }
+  public void settings() {  size(800, 600, P3D); }
   static public void main(String[] passedArgs) {
     String[] appletArgs = new String[] { "QuakeMappingCompanion" };
     if (passedArgs != null) {
