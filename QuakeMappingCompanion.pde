@@ -1,13 +1,10 @@
-//Initialize an array of strings that will hold the map file line by line
-String mapFileLines[];
-
-String mapFileLocation;
-
 //Initialize a font object that will be used to load the custom font
 PFont alata;
 
+//Initialize an object that will take care of processing the map file
 MapFileProcessor mapProcessor;
 
+//Will run once at the start of the program's life
 void setup()
 {
     //This makes sure that the window can be resized, both in 2D and 3D
@@ -22,6 +19,7 @@ void setup()
     //mapFileLines = loadStrings(mapFileLocation);
 }
 
+//Will update once per frame, place your drawing routines here
 void draw()
 {
     cls();
@@ -31,21 +29,24 @@ void draw()
     text("MAIN WINDOW", width/8, height/8, width-width/5, height-height/5);
 }
 
+//This method will be run once the file selection dialog is closed
 void fileSelected(File selection) 
 {
+    //No selection made
     if (selection == null) 
     {
         println("Window was closed or the user hit cancel.");
+
+        //Close the program
+        exit();
     } 
 
+    //File was selected
     else 
     {
         println("User selected " + selection.getAbsolutePath());
 
-        mapFileLocation = selection.getAbsolutePath();
-
+        //Create the object that will take care of processign the map file, feed it the file's path as an input
         mapProcessor = new MapFileProcessor(selection.getAbsolutePath());
-
-        println(mapProcessor.toString());
     }
 }
