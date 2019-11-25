@@ -46,10 +46,10 @@ public void draw()
         //Only run the following code if the file has been validated to be a Trenchbroom Quake map file
         if (mapProcessor.fileValidated)
         {
-            textAlign(CENTER);
-            text("FILE VALIDATED!", width/8, height/8, width-width/5, height-height/5);
+            
         }
 
+        //The file must have loaded, but failed the verification
         else
         {
             textAlign(CENTER);
@@ -57,6 +57,7 @@ public void draw()
         }
     }
 
+    //No file has been loaded, or the file loaded was not a map file
     else
     {
         textAlign(CENTER);
@@ -74,7 +75,7 @@ public void fileSelected(File selection)
 
         //Close the program
         exit();
-    } 
+    }
 
     //File was selected
     else 
@@ -83,6 +84,8 @@ public void fileSelected(File selection)
 
         //Load the map file into the processor object
         mapProcessor.loadFile(selection.getAbsolutePath());
+
+        mapProcessor.processFile();
     }
 }
 class MapFileProcessor
@@ -122,6 +125,22 @@ class MapFileProcessor
             if (mapFileLines[0].equals("// Game: Quake"))
             {
                 fileValidated = true;
+            }
+        }
+    }
+
+    public void processFile()
+    {
+        processBrushes();
+    }
+    
+    public void processBrushes()
+    {
+        for (int i = 0; i < mapFileLines.length; i++)
+        {
+            if (mapFileLines[i].contains("brush"))
+            {
+                println("Brush at line " + i);
             }
         }
     }

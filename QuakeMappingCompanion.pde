@@ -30,8 +30,7 @@ void draw()
         //Only run the following code if the file has been validated to be a Trenchbroom Quake map file
         if (mapProcessor.fileValidated)
         {
-            textAlign(CENTER);
-            text("FILE VALIDATED!", width/8, height/8, width-width/5, height-height/5);
+            
         }
 
         //The file must have loaded, but failed the verification
@@ -60,7 +59,7 @@ void fileSelected(File selection)
 
         //Close the program
         exit();
-    } 
+    }
 
     //File was selected
     else 
@@ -69,5 +68,7 @@ void fileSelected(File selection)
 
         //Load the map file into the processor object
         mapProcessor.loadFile(selection.getAbsolutePath());
+
+        mapProcessor.processFile();
     }
 }

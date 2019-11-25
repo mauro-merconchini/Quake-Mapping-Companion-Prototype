@@ -38,4 +38,20 @@ class MapFileProcessor
             }
         }
     }
+    
+    void processFile()
+    {
+        processBrushes();
+    }
+    
+    void processBrushes()
+    {
+        for (int i = 0; i < mapFileLines.length; i++)
+        {
+            if (mapFileLines[i].contains("brush"))
+            {
+                println("Brush at line " + i);
+            }
+        }
+    }
 }
