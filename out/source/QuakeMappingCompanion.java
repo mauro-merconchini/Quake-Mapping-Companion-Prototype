@@ -104,7 +104,29 @@ class Brush
 }
 class Entity
 {
-    
+    //int startLine, endLine;
+    String entityLines[];
+
+    Entity(String lines[])
+    {
+        // startLine = start;
+        // endLine = end;
+        entityLines = lines;
+    }
+
+    public String toString()
+    {
+        //return "Entity Start\t\t" + startLine + "\t\tEntityEnd\t\t" + endLine;
+        return "testing";
+    }
+
+    public void printLines()
+    {
+        for (int i = 0; i < entityLines.length; i++)
+        {
+            println(entityLines[i]);
+        }
+    }
 }
 
 
@@ -113,13 +135,12 @@ class MapFileProcessor
     String mapFilePath;
     String mapFileLines[];
 
-    boolean fileLoaded;
-    boolean fileValidated;
+    boolean fileLoaded, fileValidated;
 
-    ArrayList<Brush> brushList;
+    ArrayList<Entity> entityList;
 
     //Empty constructor
-    MapFileProcessor() { brushList = new ArrayList<Brush>(); }
+    MapFileProcessor() { entityList = new ArrayList<Entity>(); }
 
     //Prints the path of the map file
     public String mapPath()
@@ -151,64 +172,66 @@ class MapFileProcessor
         }
     }
     
+    //Will call helper methods to scan the file and collect information
     public void processMapFile()
     {
-        println(mapFileLines[3]);
-
-        //rawScan();
+        entityScan();
     }
 
-    public void rawScan()
+    //Scans the file for entities, creates the entity objects, and adds them to the list
+    public void entityScan()
     {
-        int curlyStart = 0;
-        int curlyEnd = 0;
+        int entityStart = 0;
+        int entityEnd = 0;
 
-        Stack curlyStack = new Stack();
-
-        int entityCount = 0;
+        Stack entityCurlyStack = new Stack();
 
         for (int i = 0; i < mapFileLines.length; i++)
         {
-            System.out.printf("i = %d\n", i);
+            Entity tempEntity;
 
             if (mapFileLines[i].equals("{") && mapFileLines[i - 1].contains("// entity"))
             {
-                System.out.printf("i - 1 = %d\n", i);
-                curlyStart = i;
-                System.out.printf("pushed at %d\n", i);
-                curlyStack.push(i);
+                entityStart = i + 1;
+                entityCurlyStack.push(i);
             }
 
             else if (mapFileLines[i].equals("{"))
             {
-                System.out.printf("pushed at %d\n", i);
-                curlyStack.push(i);
+                entityCurlyStack.push(i);
             }
 
             else if (mapFileLines[i].equals("}"))
             {
-                System.out.printf("popped at %d\n", i);
-                curlyStack.pop();
+                entityCurlyStack.pop();
 
-                if (curlyStack.empty())
+                if (entityCurlyStack.empty())
                 {
-                    System.out.printf("stack now empty at %d\n", i);
-                    curlyEnd = i;
+                    // entityEnd = i - 1;
 
-                    println("Entity start:\t\t" + curlyStart + "\t\tEntity end:\t\t" + curlyEnd);
+                    // tempEntity = new Entity(entityStart, entityEnd, mapFileLines);
+                    // //println(tempEntity.toString());
 
-                    entityCount++;
+                    // entityList.add(tempEntity);
+
+                    int entityBlockLength = entityEnd - entityStart;
+                    String entityLines[] = new String[entityBlockLength];
+
+                    int copyLocation = entityStart;
+
+                    for (int j = 0; j < entityLines.length; j++)
+                    {
+                        entityLines[i] = mapFileLines[copyLocation];
+                        copyLocation++;
+                    }
+
+                    tempEntity = new Entity(entityLines);
+                    entityList.add(tempEntity);
                 }
             }
-
-            if (entityCount != 0)
-            {
-                break;
-            }
         }
-
-        println(curlyStack);
-        println("\nTotal Entities: " + entityCount);
+        
+        //entityList.get(1).printLines();
     }
 }
 //A simple method to clear the screen on each frame, avoid ghosting
