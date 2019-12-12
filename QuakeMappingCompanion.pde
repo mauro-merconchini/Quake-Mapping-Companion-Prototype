@@ -75,6 +75,7 @@ void fileSelected(File selection)
         mapProcessor.processMapFile();
         int end = millis();
 
+        //This is here just to observe how long it takes the program to process a map file
         println("Map File Processing Time: " + (end - start) + " ms");
     }
 }

@@ -1,26 +1,20 @@
 class Entity
 {
-    //int startLine, endLine;
-    String entityLines[];
+    int start, end;
+    String mapFile[];
 
-    Entity(String lines[])
+    Entity(String mapFileLines[], int startLine, int endLine)
     {
-        // startLine = start;
-        // endLine = end;
-        entityLines = lines;
+        mapFile = mapFileLines;
+        start = startLine;
+        end = endLine;
     }
 
-    String toString()
+    void wasteTime()
     {
-        //return "Entity Start\t\t" + startLine + "\t\tEntityEnd\t\t" + endLine;
-        return "testing";
-    }
-
-    void printLines()
-    {
-        for (int i = 0; i < entityLines.length; i++)
+        for (int i = start; i < end + 1; i++)
         {
-            println(entityLines[i]);
+            println("a");
         }
     }
 }

@@ -89,13 +89,7 @@ class MapFileProcessor
                     //Record the line in which the entity ends
                     entityEnd = i;
 
-                    //Calculate the length of the entity block
-                    int entityBlockLength = entityEnd - entityStart;
-
-                    //println(entityBlockLength);
-
-
-                    //String entityLines[] = new String[entityBlockLength];
+                    // String entityLines[] = new String[entityBlockLength];
 
                     //int copyLocation = entityStart;
 
@@ -107,6 +101,9 @@ class MapFileProcessor
 
                     //tempEntity = new Entity(entityLines);
                     //entityList.add(tempEntity);
+
+                    tempEntity = new Entity(mapFileLines, entityStart, entityEnd);
+                    tempEntity.wasteTime();
                 }
             }
         }

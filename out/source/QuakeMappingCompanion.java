@@ -93,6 +93,7 @@ public void fileSelected(File selection)
         mapProcessor.processMapFile();
         int end = millis();
 
+        //This is here just to observe how long it takes the program to process a map file
         println("Map File Processing Time: " + (end - start) + " ms");
     }
 }
@@ -108,27 +109,21 @@ class Brush
 }
 class Entity
 {
-    //int startLine, endLine;
-    String entityLines[];
+    int start, end;
+    String mapFile[];
 
-    Entity(String lines[])
+    Entity(String mapFileLines[], int startLine, int endLine)
     {
-        // startLine = start;
-        // endLine = end;
-        entityLines = lines;
+        mapFile = mapFileLines;
+        start = startLine;
+        end = endLine;
     }
 
-    public String toString()
+    public void wasteTime()
     {
-        //return "Entity Start\t\t" + startLine + "\t\tEntityEnd\t\t" + endLine;
-        return "testing";
-    }
-
-    public void printLines()
-    {
-        for (int i = 0; i < entityLines.length; i++)
+        for (int i = start; i < end + 1; i++)
         {
-            println(entityLines[i]);
+            //println("a");
         }
     }
 }
@@ -223,13 +218,7 @@ class MapFileProcessor
                     //Record the line in which the entity ends
                     entityEnd = i;
 
-                    //Calculate the length of the entity block
-                    int entityBlockLength = entityEnd - entityStart;
-
-                    //println(entityBlockLength);
-
-
-                    //String entityLines[] = new String[entityBlockLength];
+                    // String entityLines[] = new String[entityBlockLength];
 
                     //int copyLocation = entityStart;
 
@@ -241,6 +230,9 @@ class MapFileProcessor
 
                     //tempEntity = new Entity(entityLines);
                     //entityList.add(tempEntity);
+
+                    tempEntity = new Entity(mapFileLines, entityStart, entityEnd);
+                    tempEntity.wasteTime();
                 }
             }
         }
