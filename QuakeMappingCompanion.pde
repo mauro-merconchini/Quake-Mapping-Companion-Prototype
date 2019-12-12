@@ -55,7 +55,7 @@ void draw()
 void fileSelected(File selection) 
 {
     //No selection made
-    if (selection == null) 
+    if (selection == null)
     {
         println("Window was closed or the user hit cancel.");
 
@@ -70,7 +70,11 @@ void fileSelected(File selection)
 
         //Load the map file into the processor object
         mapProcessor.loadFile(selection.getAbsolutePath());
-
+        
+        int start = millis();
         mapProcessor.processMapFile();
+        int end = millis();
+
+        println("Map File Processing Time: " + (end - start) + " ms");
     }
 }

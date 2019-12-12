@@ -73,7 +73,7 @@ public void draw()
 public void fileSelected(File selection) 
 {
     //No selection made
-    if (selection == null) 
+    if (selection == null)
     {
         println("Window was closed or the user hit cancel.");
 
@@ -88,8 +88,12 @@ public void fileSelected(File selection)
 
         //Load the map file into the processor object
         mapProcessor.loadFile(selection.getAbsolutePath());
-
+        
+        int start = millis();
         mapProcessor.processMapFile();
+        int end = millis();
+
+        println("Map File Processing Time: " + (end - start) + " ms");
     }
 }
 class Brush
@@ -181,52 +185,62 @@ class MapFileProcessor
     //Scans the file for entities, creates the entity objects, and adds them to the list
     public void entityScan()
     {
+        //Intitalize two integers that will determine the start and end of an entity block
         int entityStart = 0;
         int entityEnd = 0;
 
+        //Initialize a stack that will be used to determine when an entity ends
         Stack entityCurlyStack = new Stack();
 
+        //This loop scans through all the lines of the map file top to bottom
         for (int i = 0; i < mapFileLines.length; i++)
         {
             Entity tempEntity;
 
+            //This is how you determine the start of an entity block
             if (mapFileLines[i].equals("{") && mapFileLines[i - 1].contains("// entity"))
             {
+                //Record the line in which the entity starts
                 entityStart = i + 1;
+                //Push a curly to the stack
                 entityCurlyStack.push(i);
             }
 
+            //Any curly openings need to be pushed to the stack
             else if (mapFileLines[i].equals("{"))
             {
                 entityCurlyStack.push(i);
             }
 
+            //Any curly closes need to cause a stack pop
             else if (mapFileLines[i].equals("}"))
             {
                 entityCurlyStack.pop();
 
+                //Check if the pop made the stack empty, which means you reached the end of an entity block
                 if (entityCurlyStack.empty())
                 {
-                    // entityEnd = i - 1;
+                    //Record the line in which the entity ends
+                    entityEnd = i;
 
-                    // tempEntity = new Entity(entityStart, entityEnd, mapFileLines);
-                    // //println(tempEntity.toString());
-
-                    // entityList.add(tempEntity);
-
+                    //Calculate the length of the entity block
                     int entityBlockLength = entityEnd - entityStart;
-                    String entityLines[] = new String[entityBlockLength];
 
-                    int copyLocation = entityStart;
+                    //println(entityBlockLength);
 
-                    for (int j = 0; j < entityLines.length; j++)
-                    {
-                        entityLines[i] = mapFileLines[copyLocation];
-                        copyLocation++;
-                    }
 
-                    tempEntity = new Entity(entityLines);
-                    entityList.add(tempEntity);
+                    //String entityLines[] = new String[entityBlockLength];
+
+                    //int copyLocation = entityStart;
+
+                    // for (int j = 0; j < entityLines.length; j++)
+                    // {
+                    //     entityLines[j] = mapFileLines[copyLocation];
+                    //     copyLocation++;
+                    // }
+
+                    //tempEntity = new Entity(entityLines);
+                    //entityList.add(tempEntity);
                 }
             }
         }
