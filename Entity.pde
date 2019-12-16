@@ -1,20 +1,24 @@
 class Entity
 {
     int start, end;
-    String mapFile[];
+    String mapFileLines[];
 
-    Entity(String mapFileLines[], int startLine, int endLine)
+    MapFileProcessor mapProcc = new MapFileProcessor();
+
+
+
+    Entity(String[] mapLines, int startLine, int endLine)
     {
-        mapFile = mapFileLines;
+        mapFileLines = mapLines;
         start = startLine;
         end = endLine;
     }
 
     void wasteTime()
     {
-        for (int i = start; i < end + 1; i++)
+        for (int i = start; i < end; i ++)
         {
-            println("a");
+            println(mapFileLines[i]);
         }
     }
 }

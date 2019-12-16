@@ -77,7 +77,7 @@ public void fileSelected(File selection)
     {
         println("Window was closed or the user hit cancel.");
 
-        //Close the program
+        //Close the program;
         exit();
     }
 
@@ -110,20 +110,24 @@ class Brush
 class Entity
 {
     int start, end;
-    String mapFile[];
+    String mapFileLines[];
 
-    Entity(String mapFileLines[], int startLine, int endLine)
+    MapFileProcessor mapProcc = new MapFileProcessor();
+
+
+
+    Entity(String[] mapLines, int startLine, int endLine)
     {
-        mapFile = mapFileLines;
+        mapFileLines = mapLines;
         start = startLine;
         end = endLine;
     }
 
     public void wasteTime()
     {
-        for (int i = start; i < end + 1; i++)
+        for (int i = start; i < end; i ++)
         {
-            //println("a");
+            println(mapFileLines[i]);
         }
     }
 }
@@ -190,8 +194,6 @@ class MapFileProcessor
         //This loop scans through all the lines of the map file top to bottom
         for (int i = 0; i < mapFileLines.length; i++)
         {
-            Entity tempEntity;
-
             //This is how you determine the start of an entity block
             if (mapFileLines[i].equals("{") && mapFileLines[i - 1].contains("// entity"))
             {
@@ -215,29 +217,13 @@ class MapFileProcessor
                 //Check if the pop made the stack empty, which means you reached the end of an entity block
                 if (entityCurlyStack.empty())
                 {
-                    //Record the line in which the entity ends
-                    entityEnd = i;
-
-                    // String entityLines[] = new String[entityBlockLength];
-
-                    //int copyLocation = entityStart;
-
-                    // for (int j = 0; j < entityLines.length; j++)
-                    // {
-                    //     entityLines[j] = mapFileLines[copyLocation];
-                    //     copyLocation++;
-                    // }
-
-                    //tempEntity = new Entity(entityLines);
-                    //entityList.add(tempEntity);
-
-                    tempEntity = new Entity(mapFileLines, entityStart, entityEnd);
-                    tempEntity.wasteTime();
+                    Entity mapEntity = new Entity(mapFileLines, entityStart, entityEnd);
+                    entityList.add(mapEntity);
                 }
             }
         }
         
-        //entityList.get(1).printLines();
+        println("entityList now has a size: " + entityList.size());
     }
 }
 //A simple method to clear the screen on each frame, avoid ghosting
@@ -253,7 +239,7 @@ public void fontSetup()
     alata = createFont("data/Alata-Regular.ttf", width/10);
     textFont(alata);
 }
-  public void settings() {  size(800, 600, P3D); }
+  public void settings() {  size(800, 600); }
   static public void main(String[] passedArgs) {
     String[] appletArgs = new String[] { "QuakeMappingCompanion" };
     if (passedArgs != null) {

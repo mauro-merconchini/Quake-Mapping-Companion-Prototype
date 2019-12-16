@@ -61,8 +61,6 @@ class MapFileProcessor
         //This loop scans through all the lines of the map file top to bottom
         for (int i = 0; i < mapFileLines.length; i++)
         {
-            Entity tempEntity;
-
             //This is how you determine the start of an entity block
             if (mapFileLines[i].equals("{") && mapFileLines[i - 1].contains("// entity"))
             {
@@ -86,28 +84,12 @@ class MapFileProcessor
                 //Check if the pop made the stack empty, which means you reached the end of an entity block
                 if (entityCurlyStack.empty())
                 {
-                    //Record the line in which the entity ends
-                    entityEnd = i;
-
-                    // String entityLines[] = new String[entityBlockLength];
-
-                    //int copyLocation = entityStart;
-
-                    // for (int j = 0; j < entityLines.length; j++)
-                    // {
-                    //     entityLines[j] = mapFileLines[copyLocation];
-                    //     copyLocation++;
-                    // }
-
-                    //tempEntity = new Entity(entityLines);
-                    //entityList.add(tempEntity);
-
-                    tempEntity = new Entity(mapFileLines, entityStart, entityEnd);
-                    tempEntity.wasteTime();
+                    Entity mapEntity = new Entity(mapFileLines, entityStart, entityEnd);
+                    entityList.add(mapEntity);
                 }
             }
         }
         
-        //entityList.get(1).printLines();
+        println("entityList now has a size: " + entityList.size());
     }
 }

@@ -11,7 +11,7 @@ void setup()
     surface.setResizable(true);
 
     //Initialize a 3D window for text and graphics to be displayed
-    size(800, 600, P3D);
+    size(800, 600);
 
     selectInput("Select a .map file to process", "fileSelected");
 
@@ -30,8 +30,6 @@ void draw()
         //Only run the following code if the file has been validated to be a Trenchbroom Quake map file
         if (mapProcessor.fileValidated)
         {
-            //println(frameRate);
-
             noLoop();
         }
 
@@ -59,7 +57,7 @@ void fileSelected(File selection)
     {
         println("Window was closed or the user hit cancel.");
 
-        //Close the program
+        //Close the program;
         exit();
     }
 
