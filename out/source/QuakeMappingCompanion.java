@@ -48,8 +48,6 @@ public void draw()
         //Only run the following code if the file has been validated to be a Trenchbroom Quake map file
         if (mapProcessor.fileValidated)
         {
-            //println(frameRate);
-
             noLoop();
         }
 
@@ -90,7 +88,9 @@ public void fileSelected(File selection)
         mapProcessor.loadFile(selection.getAbsolutePath());
         
         int start = millis();
-        mapProcessor.processMapFile();
+        Thread processThread = new Thread(mapProcessor);
+        //mapProcessor.processMapFile();
+        processThread.start();
         int end = millis();
 
         //This is here just to observe how long it takes the program to process a map file
@@ -109,12 +109,11 @@ class Brush
 }
 class Entity
 {
+    //These integers will define where the scanning process in the mapFileLines array begins and ends
     int start, end;
+    
+    //This will be a carbomn copy of the mapFileLines array that is used by the MapFileProcessor class, but it will be limited with a range of lines that it can scan
     String mapFileLines[];
-
-    MapFileProcessor mapProcc = new MapFileProcessor();
-
-
 
     Entity(String[] mapLines, int startLine, int endLine)
     {
@@ -125,7 +124,13 @@ class Entity
 
     public void wasteTime()
     {
-        for (int i = start; i < end; i ++)
+        println("you have called the wasteTime function");
+        println("mapFileLines has a size of " + mapFileLines.length);
+
+
+        println("start: " + start);
+        println("end: " + end + "\n");
+        for (int i = start; i < end; i++)
         {
             println(mapFileLines[i]);
         }
@@ -133,7 +138,7 @@ class Entity
 }
 
 
-class MapFileProcessor
+class MapFileProcessor implements Runnable
 {
     String mapFilePath;
     String mapFileLines[];
@@ -175,11 +180,7 @@ class MapFileProcessor
         }
     }
     
-    //Will call helper methods to scan the file and collect information
-    public void processMapFile()
-    {
-        entityScan();
-    }
+
 
     //Scans the file for entities, creates the entity objects, and adds them to the list
     public void entityScan()
@@ -199,6 +200,7 @@ class MapFileProcessor
             {
                 //Record the line in which the entity starts
                 entityStart = i + 1;
+
                 //Push a curly to the stack
                 entityCurlyStack.push(i);
             }
@@ -217,13 +219,21 @@ class MapFileProcessor
                 //Check if the pop made the stack empty, which means you reached the end of an entity block
                 if (entityCurlyStack.empty())
                 {
+                    entityEnd = i;
+
                     Entity mapEntity = new Entity(mapFileLines, entityStart, entityEnd);
                     entityList.add(mapEntity);
                 }
             }
         }
         
-        println("entityList now has a size: " + entityList.size());
+        Entity testEnt = entityList.get(1);
+        testEnt.wasteTime();
+    }
+
+    public void run()
+    {
+        entityScan();
     }
 }
 //A simple method to clear the screen on each frame, avoid ghosting

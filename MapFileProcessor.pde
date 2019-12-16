@@ -1,6 +1,6 @@
 import java.util.Stack;
 
-class MapFileProcessor
+class MapFileProcessor implements Runnable
 {
     String mapFilePath;
     String mapFileLines[];
@@ -42,11 +42,7 @@ class MapFileProcessor
         }
     }
     
-    //Will call helper methods to scan the file and collect information
-    void processMapFile()
-    {
-        entityScan();
-    }
+
 
     //Scans the file for entities, creates the entity objects, and adds them to the list
     void entityScan()
@@ -66,6 +62,7 @@ class MapFileProcessor
             {
                 //Record the line in which the entity starts
                 entityStart = i + 1;
+
                 //Push a curly to the stack
                 entityCurlyStack.push(i);
             }
@@ -84,12 +81,20 @@ class MapFileProcessor
                 //Check if the pop made the stack empty, which means you reached the end of an entity block
                 if (entityCurlyStack.empty())
                 {
+                    entityEnd = i;
+
                     Entity mapEntity = new Entity(mapFileLines, entityStart, entityEnd);
                     entityList.add(mapEntity);
                 }
             }
         }
         
-        println("entityList now has a size: " + entityList.size());
+        Entity testEnt = entityList.get(1);
+        testEnt.wasteTime();
+    }
+
+    void run()
+    {
+        entityScan();
     }
 }

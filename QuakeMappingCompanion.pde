@@ -70,7 +70,9 @@ void fileSelected(File selection)
         mapProcessor.loadFile(selection.getAbsolutePath());
         
         int start = millis();
-        mapProcessor.processMapFile();
+        Thread processThread = new Thread(mapProcessor);
+        //mapProcessor.processMapFile();
+        processThread.start();
         int end = millis();
 
         //This is here just to observe how long it takes the program to process a map file
