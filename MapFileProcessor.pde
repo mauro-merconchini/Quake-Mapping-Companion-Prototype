@@ -42,8 +42,6 @@ class MapFileProcessor implements Runnable
         }
     }
     
-
-
     //Scans the file for entities, creates the entity objects, and adds them to the list
     void entityScan()
     {
@@ -84,13 +82,11 @@ class MapFileProcessor implements Runnable
                     entityEnd = i;
 
                     Entity mapEntity = new Entity(mapFileLines, entityStart, entityEnd);
+                    mapEntity.processEntity();
                     entityList.add(mapEntity);
                 }
             }
         }
-        
-        Entity testEnt = entityList.get(1);
-        testEnt.wasteTime();
     }
 
     void run()
