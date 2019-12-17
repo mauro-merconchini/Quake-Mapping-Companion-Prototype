@@ -3,7 +3,6 @@ class Brush
     String mapFileLines[];
     int start, end;
 
-    String texture;
     boolean isWorldSpawn;
     boolean isDoor;
     boolean isTrigger;
@@ -15,5 +14,11 @@ class Brush
         mapFileLines = mapLines;
         start = brushStart;
         end = brushEnd;
+    }
+
+    void doSomething()
+    {
+        // println("Brush Start: " + start);
+        // println("Brush End: " + end + "\n");
     }
 }

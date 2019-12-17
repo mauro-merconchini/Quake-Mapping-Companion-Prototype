@@ -50,6 +50,7 @@ public void draw()
         //Only run the following code if the file has been validated to be a Trenchbroom Quake map file
         if (mapProcessor.fileValidated)
         {
+            println("I'm in the draw function");
             noLoop();
         }
 
@@ -104,7 +105,6 @@ class Brush
     String mapFileLines[];
     int start, end;
 
-    String texture;
     boolean isWorldSpawn;
     boolean isDoor;
     boolean isTrigger;
@@ -116,6 +116,12 @@ class Brush
         mapFileLines = mapLines;
         start = brushStart;
         end = brushEnd;
+    }
+
+    public void doSomething()
+    {
+        // println("Brush Start: " + start);
+        // println("Brush End: " + end + "\n");
     }
 }
 
@@ -162,8 +168,6 @@ class Entity
             //This makes sure that you get rid of the quotation marks in the classname
             String tempString = classScanner.next();
             entityClass = tempString.substring(1, (tempString.length() - 1));
-
-            println(entityClass);
         }
     }
 
@@ -199,6 +203,8 @@ class Entity
 
                     Brush entityBrush = new Brush(mapFileLines, brushStart, brushEnd);
                     brushList.add(entityBrush);
+
+                    entityBrush.doSomething();
                 }
             }
         }

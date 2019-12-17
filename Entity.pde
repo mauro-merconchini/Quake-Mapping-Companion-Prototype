@@ -77,6 +77,8 @@ class Entity
 
                     Brush entityBrush = new Brush(mapFileLines, brushStart, brushEnd);
                     brushList.add(entityBrush);
+
+                    entityBrush.doSomething();
                 }
             }
         }
