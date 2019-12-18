@@ -13,6 +13,8 @@ class Entity
 
     StringList textureList;
 
+    int entityBrushCount;
+
     Entity(String[] mapLines, int startLine, int endLine)
     {
         mapFileLines = mapLines;
@@ -52,6 +54,9 @@ class Entity
             //This is how you determine the start of a brush block
             if (mapFileLines[i].equals("{") && mapFileLines[i - 1].contains("// brush"))
             {
+                //Increment the counter of how many brushes this entity is made of
+                entityBrushCount++;
+
                 //Increment i by 1 which skips the { and puts the for loop at the first line of the brush block
                 i++;             
 
@@ -72,5 +77,15 @@ class Entity
                 }
             }
         }
+    }
+
+    String className()
+    {
+        return entityClass;
+    }
+
+    int brushCount()
+    {
+        return entityBrushCount;
     }
 }

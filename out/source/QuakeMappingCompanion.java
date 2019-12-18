@@ -5,7 +5,6 @@ import processing.opengl.*;
 
 import java.util.Scanner; 
 import java.util.Stack; 
-import java.util.Arrays; 
 import java.util.Stack; 
 
 import java.util.HashMap; 
@@ -51,7 +50,8 @@ public void draw()
         //Only run the following code if the file has been validated to be a Trenchbroom Quake map file
         if (mapProcessor.fileValidated)
         {
-            noLoop();
+            println(mapProcessor.brushes());
+            // noLoop();
         }
 
         //The file must have loaded, but failed the verification
@@ -90,17 +90,13 @@ public void fileSelected(File selection)
         //Load the map file into the processor object
         mapProcessor.loadFile(selection.getAbsolutePath());
         
-        int start = millis();
+        //Kick off the first run of the processing thread
         Thread processThread = new Thread(mapProcessor);
-        //mapProcessor.processMapFile();
         processThread.start();
-        int end = millis();
 
-        //This is here just to observe how long it takes the program to process a map file
-        println("Map File Processing Time: " + (end - start) + " ms");
+        
     }
 }
-
 
 
 
@@ -115,6 +111,8 @@ class Entity
     String entityClass;
 
     StringList textureList;
+
+    int entityBrushCount;
 
     Entity(String[] mapLines, int startLine, int endLine)
     {
@@ -155,6 +153,9 @@ class Entity
             //This is how you determine the start of a brush block
             if (mapFileLines[i].equals("{") && mapFileLines[i - 1].contains("// brush"))
             {
+                //Increment the counter of how many brushes this entity is made of
+                entityBrushCount++;
+
                 //Increment i by 1 which skips the { and puts the for loop at the first line of the brush block
                 i++;             
 
@@ -174,10 +175,17 @@ class Entity
                     i++;
                 }
             }
-
-            println(Arrays.toString(textureList.array()));
-
         }
+    }
+
+    public String className()
+    {
+        return entityClass;
+    }
+
+    public int brushCount()
+    {
+        return entityBrushCount;
     }
 }
 
@@ -190,6 +198,9 @@ class MapFileProcessor implements Runnable
     boolean fileLoaded, fileValidated;
 
     ArrayList<Entity> entityList;
+
+    int totalTriggers, totalEnemies, totalTeleports, totalDetails, 
+    totalGroups, totalLights, totalDoors, totalEntities, totalBrushes;
 
     //Empty constructor
     MapFileProcessor() { entityList = new ArrayList<Entity>(); }
@@ -264,20 +275,81 @@ class MapFileProcessor implements Runnable
                     entityEnd = i;
 
                     Entity mapEntity = new Entity(mapFileLines, entityStart, entityEnd);
-
-                    println("we are going to process an entity");
                     mapEntity.processEntity();
-
-                    println("you have added something to the entity list");
                     entityList.add(mapEntity);
                 }
             }
         }
     }
 
+
+    // THIS NEEDS FIXING, ITS THROWING NULL POINTER EXCEPTIONS
+    public void entityCount()
+    {
+        for (int i = 0; i < entityList.size(); i++)
+        {
+            //String className = entityList.get(i).className();
+
+            // println(entityList.get(i).className());
+
+            // if (entityList.get(i).className().contains("func_door"))
+            // {
+            //     println("found a door");
+            //     totalDoors++;
+            // }
+
+            // if (className.contains("func_door"))
+            // {
+            //     println("found a door");
+            //     totalDoors++;
+            // }
+
+            // else if (className.contains("func_detail"))
+            // {
+            //     println("\nFOUND A MAP DETAIL\n");
+            //     totalDetails++;
+            // }
+
+            // else if (className.contains("trigger_teleport"))
+            // {
+            //     totalTeleports++;
+            //     totalTriggers++;
+            // }
+
+            // else if (className.contains("trigger_"))
+            // {
+            //     totalTriggers++;
+            // }
+
+            totalEntities++;
+            totalBrushes += entityList.get(i).brushCount();
+        }
+    }
+
+    public int doors()
+    {
+        return totalDoors;
+    }
+
+    public int entities()
+    {
+        return totalEntities;
+    }
+
+    public int brushes()
+    {
+        return totalBrushes;
+    }
+
     public void run()
     {
+        long start = millis();
+        
         entityProcess();
+
+        entityCount();
+
+        println("Thread Process Time: " + (millis() - start));
     }
 }
 //A simple method to clear the screen on each frame, avoid ghosting

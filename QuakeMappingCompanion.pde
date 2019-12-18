@@ -30,7 +30,8 @@ void draw()
         //Only run the following code if the file has been validated to be a Trenchbroom Quake map file
         if (mapProcessor.fileValidated)
         {
-            noLoop();
+            println(mapProcessor.brushes());
+            // noLoop();
         }
 
         //The file must have loaded, but failed the verification
@@ -69,13 +70,10 @@ void fileSelected(File selection)
         //Load the map file into the processor object
         mapProcessor.loadFile(selection.getAbsolutePath());
         
-        int start = millis();
+        //Kick off the first run of the processing thread
         Thread processThread = new Thread(mapProcessor);
-        //mapProcessor.processMapFile();
         processThread.start();
-        int end = millis();
 
-        //This is here just to observe how long it takes the program to process a map file
-        println("Map File Processing Time: " + (end - start) + " ms");
+        
     }
 }

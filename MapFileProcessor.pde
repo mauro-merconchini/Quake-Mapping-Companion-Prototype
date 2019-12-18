@@ -9,6 +9,9 @@ class MapFileProcessor implements Runnable
 
     ArrayList<Entity> entityList;
 
+    int totalTriggers, totalEnemies, totalTeleports, totalDetails, 
+    totalGroups, totalLights, totalDoors, totalEntities, totalBrushes;
+
     //Empty constructor
     MapFileProcessor() { entityList = new ArrayList<Entity>(); }
 
@@ -82,19 +85,80 @@ class MapFileProcessor implements Runnable
                     entityEnd = i;
 
                     Entity mapEntity = new Entity(mapFileLines, entityStart, entityEnd);
-
-                    println("we are going to process an entity");
                     mapEntity.processEntity();
-
-                    println("you have added something to the entity list");
                     entityList.add(mapEntity);
                 }
             }
         }
     }
 
+
+    // THIS NEEDS FIXING, ITS THROWING NULL POINTER EXCEPTIONS
+    void entityCount()
+    {
+        for (int i = 0; i < entityList.size(); i++)
+        {
+            //String className = entityList.get(i).className();
+
+            // println(entityList.get(i).className());
+
+            // if (entityList.get(i).className().contains("func_door"))
+            // {
+            //     println("found a door");
+            //     totalDoors++;
+            // }
+
+            // if (className.contains("func_door"))
+            // {
+            //     println("found a door");
+            //     totalDoors++;
+            // }
+
+            // else if (className.contains("func_detail"))
+            // {
+            //     println("\nFOUND A MAP DETAIL\n");
+            //     totalDetails++;
+            // }
+
+            // else if (className.contains("trigger_teleport"))
+            // {
+            //     totalTeleports++;
+            //     totalTriggers++;
+            // }
+
+            // else if (className.contains("trigger_"))
+            // {
+            //     totalTriggers++;
+            // }
+
+            totalEntities++;
+            totalBrushes += entityList.get(i).brushCount();
+        }
+    }
+
+    int doors()
+    {
+        return totalDoors;
+    }
+
+    int entities()
+    {
+        return totalEntities;
+    }
+
+    int brushes()
+    {
+        return totalBrushes;
+    }
+
     void run()
     {
+        long start = millis();
+        
         entityProcess();
+
+        entityCount();
+
+        println("Thread Process Time: " + (millis() - start));
     }
 }
