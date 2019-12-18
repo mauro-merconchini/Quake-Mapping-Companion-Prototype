@@ -82,7 +82,11 @@ class MapFileProcessor implements Runnable
                     entityEnd = i;
 
                     Entity mapEntity = new Entity(mapFileLines, entityStart, entityEnd);
+
+                    println("we are going to process an entity");
                     mapEntity.processEntity();
+
+                    println("you have added something to the entity list");
                     entityList.add(mapEntity);
                 }
             }

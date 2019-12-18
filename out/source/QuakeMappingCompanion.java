@@ -5,6 +5,7 @@ import processing.opengl.*;
 
 import java.util.Scanner; 
 import java.util.Stack; 
+import java.util.Arrays; 
 import java.util.Stack; 
 
 import java.util.HashMap; 
@@ -102,6 +103,7 @@ public void fileSelected(File selection)
 
 
 
+
 class Entity
 {
     //These integers will define where the scanning process in the mapFileLines array begins and ends
@@ -112,7 +114,7 @@ class Entity
 
     String entityClass;
 
-    ArrayList<String> textureList;
+    StringList textureList;
 
     Entity(String[] mapLines, int startLine, int endLine)
     {
@@ -120,7 +122,7 @@ class Entity
         start = startLine;
         end = endLine;
 
-        textureList = new ArrayList<String>();
+        textureList = new StringList();
     }
 
     //This method calls helper methods to perform all the operations of processing an entity
@@ -160,13 +162,21 @@ class Entity
                 while (!mapFileLines[i + 1].equals("}"))
                 {
                     Scanner textureScanner = new Scanner(mapFileLines[i]);
+                    String textureName = "";
 
-                    
+                    for (int j = 0; j < 16; j++)
+                    {
+                        textureName = textureScanner.next();
+                    }
+
+                    textureList.append(textureName);
+
+                    i++;
                 }
-
-                println("END brush group " + i);
-                println(mapFileLines[i] + "\n");
             }
+
+            println(Arrays.toString(textureList.array()));
+
         }
     }
 }
@@ -254,7 +264,11 @@ class MapFileProcessor implements Runnable
                     entityEnd = i;
 
                     Entity mapEntity = new Entity(mapFileLines, entityStart, entityEnd);
+
+                    println("we are going to process an entity");
                     mapEntity.processEntity();
+
+                    println("you have added something to the entity list");
                     entityList.add(mapEntity);
                 }
             }

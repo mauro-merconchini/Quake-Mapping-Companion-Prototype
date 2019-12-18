@@ -11,7 +11,7 @@ class Entity
 
     String entityClass;
 
-    ArrayList<String> textureList;
+    StringList textureList;
 
     Entity(String[] mapLines, int startLine, int endLine)
     {
@@ -19,7 +19,7 @@ class Entity
         start = startLine;
         end = endLine;
 
-        textureList = new ArrayList<String>();
+        textureList = new StringList();
     }
 
     //This method calls helper methods to perform all the operations of processing an entity
@@ -59,12 +59,17 @@ class Entity
                 while (!mapFileLines[i + 1].equals("}"))
                 {
                     Scanner textureScanner = new Scanner(mapFileLines[i]);
+                    String textureName = "";
 
-                    
+                    for (int j = 0; j < 16; j++)
+                    {
+                        textureName = textureScanner.next();
+                    }
+
+                    textureList.append(textureName);
+
+                    i++;
                 }
-
-                println("END brush group " + i);
-                println(mapFileLines[i] + "\n");
             }
         }
     }
