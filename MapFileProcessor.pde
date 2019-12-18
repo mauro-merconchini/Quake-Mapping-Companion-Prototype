@@ -96,22 +96,14 @@ class MapFileProcessor implements Runnable
     // THIS NEEDS FIXING, ITS THROWING NULL POINTER EXCEPTIONS
     void entityCount()
     {
-        for (int i = 0; i < entityList.size(); i++)
+        for (int i = 0; i < entityList.size() - 1; i++)
         {
-            //String className = entityList.get(i).className();
+            String className = entityList.get(i).className();
 
-            // println(entityList.get(i).className());
-
-            // if (entityList.get(i).className().contains("func_door"))
+            // if (className.equals("func_door"))
             // {
-            //     println("found a door");
-            //     totalDoors++;
-            // }
-
-            // if (className.contains("func_door"))
-            // {
-            //     println("found a door");
-            //     totalDoors++;
+            //     // println("found a door");
+            //     // totalDoors++;
             // }
 
             // else if (className.contains("func_detail"))
@@ -131,8 +123,8 @@ class MapFileProcessor implements Runnable
             //     totalTriggers++;
             // }
 
-            totalEntities++;
-            totalBrushes += entityList.get(i).brushCount();
+            // totalEntities++;
+            // totalBrushes += entityList.get(i).brushCount();
         }
     }
 

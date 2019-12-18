@@ -50,8 +50,7 @@ public void draw()
         //Only run the following code if the file has been validated to be a Trenchbroom Quake map file
         if (mapProcessor.fileValidated)
         {
-            println(mapProcessor.brushes());
-            // noLoop();
+            // println(mapProcessor.brushes());
         }
 
         //The file must have loaded, but failed the verification
@@ -92,9 +91,7 @@ public void fileSelected(File selection)
         
         //Kick off the first run of the processing thread
         Thread processThread = new Thread(mapProcessor);
-        processThread.start();
-
-        
+        processThread.start();        
     }
 }
 
@@ -105,7 +102,7 @@ class Entity
     //These integers will define where the scanning process in the mapFileLines array begins and ends
     int start, end;
     
-    //This will be a carbomn copy of the mapFileLines array that is used by the MapFileProcessor class, but it will be limited with a range of lines that it can scan
+    //This will be a carbon copy of the mapFileLines array that is used by the MapFileProcessor class, but it will be limited with a range of lines that it can scan
     String mapFileLines[];
 
     String entityClass;
@@ -133,16 +130,19 @@ class Entity
     //This method uses a scanner to set the classname of the entity object
     public void setClass()
     {
-        if (mapFileLines[start].contains("classname"))
+        for (int i = start; i < end; i++)
         {
-            Scanner classScanner = new Scanner(mapFileLines[start]);
+            if (mapFileLines[i].contains("classname"))
+            {
+                Scanner classScanner = new Scanner(mapFileLines[i]);
 
-            //This gets rid of "classname" which is always going to be the first token of the line
-            classScanner.next();
+                //This gets rid of "classname" which is always going to be the first token of the line
+                classScanner.next();
 
-            //This makes sure that you get rid of the quotation marks in the classname
-            String tempString = classScanner.next();
-            entityClass = tempString.substring(1, (tempString.length() - 1));
+                //This makes sure that you get rid of the quotation marks in the classname
+                String tempString = classScanner.next();
+                entityClass = tempString.substring(1, (tempString.length() - 1));
+            }
         }
     }
 
@@ -156,7 +156,7 @@ class Entity
                 //Increment the counter of how many brushes this entity is made of
                 entityBrushCount++;
 
-                //Increment i by 1 which skips the { and puts the for loop at the first line of the brush block
+                //Increment i by 1 which skips the { and puts the for-loop at the first line of the brush block
                 i++;             
 
                 //Code block inside this loop will run for the entire brush block
@@ -165,11 +165,13 @@ class Entity
                     Scanner textureScanner = new Scanner(mapFileLines[i]);
                     String textureName = "";
 
+                    //Gets the exact String token of the texture name, should replace this with a more elegant solution
                     for (int j = 0; j < 16; j++)
                     {
                         textureName = textureScanner.next();
                     }
 
+                    //Add that texture token to the StringList
                     textureList.append(textureName);
 
                     i++;
@@ -286,22 +288,18 @@ class MapFileProcessor implements Runnable
     // THIS NEEDS FIXING, ITS THROWING NULL POINTER EXCEPTIONS
     public void entityCount()
     {
-        for (int i = 0; i < entityList.size(); i++)
+        PrintWriter classWriter = createWriter("output2.txt");
+
+        for (int i = 0; i < entityList.size() - 1; i++)
         {
-            //String className = entityList.get(i).className();
+            String className = entityList.get(i).className();
 
-            // println(entityList.get(i).className());
+            classWriter.println(className);
 
-            // if (entityList.get(i).className().contains("func_door"))
+            // if (className.equals("func_door"))
             // {
-            //     println("found a door");
-            //     totalDoors++;
-            // }
-
-            // if (className.contains("func_door"))
-            // {
-            //     println("found a door");
-            //     totalDoors++;
+            //     // println("found a door");
+            //     // totalDoors++;
             // }
 
             // else if (className.contains("func_detail"))
@@ -321,9 +319,13 @@ class MapFileProcessor implements Runnable
             //     totalTriggers++;
             // }
 
-            totalEntities++;
-            totalBrushes += entityList.get(i).brushCount();
+            // totalEntities++;
+            // totalBrushes += entityList.get(i).brushCount();
         }
+
+        classWriter.close();
+
+        exit();
     }
 
     public int doors()
