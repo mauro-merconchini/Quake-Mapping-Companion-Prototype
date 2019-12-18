@@ -11,7 +11,7 @@ class Entity
 
     String entityClass;
 
-    ArrayList<Brush> brushList;
+    ArrayList<String> textureList;
 
     Entity(String[] mapLines, int startLine, int endLine)
     {
@@ -19,14 +19,14 @@ class Entity
         start = startLine;
         end = endLine;
 
-        brushList = new ArrayList<Brush>();
+        textureList = new ArrayList<String>();
     }
 
     //This method calls helper methods to perform all the operations of processing an entity
     void processEntity()
     {
         setClass();
-        brushScan();
+        brushProcess();
     }
 
     //This method uses a scanner to set the classname of the entity object
@@ -45,41 +45,26 @@ class Entity
         }
     }
 
-    void brushScan()
+    void brushProcess()
     {
-        int brushStart = 0;
-        int brushEnd = 0;
-
-         //Initialize a stack that will be used to determine when a brush block ends
-        Stack brushCurlyStack = new Stack();
-
         for (int i = start; i < end; i++)
         {
             //This is how you determine the start of a brush block
             if (mapFileLines[i].equals("{") && mapFileLines[i - 1].contains("// brush"))
             {
-                //Record the start of the brush block
-                brushStart = i + 1;
+                //Increment i by 1 which skips the { and puts the for loop at the first line of the brush block
+                i++;             
 
-                brushCurlyStack.push(i);
-            }
-
-            //Any curly closes need to cause a stack pop
-            else if (mapFileLines[i].equals("}"))
-            {
-                brushCurlyStack.pop();
-
-                //Check if the pop made the stack empty, which means you reached the end of an entity block
-                if (brushCurlyStack.empty())
+                //Code block inside this loop will run for the entire brush block
+                while (!mapFileLines[i + 1].equals("}"))
                 {
-                    //Record the end of the brush block
-                    brushEnd = i;
+                    Scanner textureScanner = new Scanner(mapFileLines[i]);
 
-                    Brush entityBrush = new Brush(mapFileLines, brushStart, brushEnd);
-                    brushList.add(entityBrush);
-
-                    entityBrush.doSomething();
+                    
                 }
+
+                println("END brush group " + i);
+                println(mapFileLines[i] + "\n");
             }
         }
     }

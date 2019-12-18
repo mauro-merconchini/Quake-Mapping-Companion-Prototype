@@ -43,7 +43,7 @@ class MapFileProcessor implements Runnable
     }
     
     //Scans the file for entities, creates the entity objects, and adds them to the list
-    void entityScan()
+    void entityProcess()
     {
         //Intitalize two integers that will determine the start and end of an entity block
         int entityStart = 0;
@@ -91,6 +91,6 @@ class MapFileProcessor implements Runnable
 
     void run()
     {
-        entityScan();
+        entityProcess();
     }
 }
