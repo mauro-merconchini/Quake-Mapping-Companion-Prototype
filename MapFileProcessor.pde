@@ -9,9 +9,8 @@ class MapFileProcessor implements Runnable
 
     ArrayList<Entity> entityList;
 
-    int totalTriggers, totalTriggerBrushes, totalEnemies, totalTeleports, totalTeleportBrushes, 
-    totalDetails, totalDetailBrushes, totalGroups, totalGroupBrushes, totalLights, totalDoors, 
-    totalDoorBrushes, totalEntities, totalBrushes;
+    int triggers, triggerBrushes, enemies,teleports, teleportBrushes, details, detailBrushes, 
+    groups, groupBrushes, lights, doors, doorBrushes, entities, brushes;
 
     //Prints the path of the map file
     String mapPath()
@@ -53,6 +52,7 @@ class MapFileProcessor implements Runnable
         //Initialize a stack that will be used to determine when an entity ends
         Stack entityCurlyStack = new Stack();
 
+        //Prepare the Entity ArrayList
         entityList = new ArrayList<Entity>();
 
         //This loop scans through all the lines of the map file top to bottom
@@ -145,72 +145,31 @@ class MapFileProcessor implements Runnable
             foundBrushes += entityList.get(i).brushCount();
         }
 
-        totalEntities = foundEntities;
-        totalBrushes = foundBrushes;
-        totalLights = foundLights;
-        totalEnemies = foundEnemies;
-        totalDoors = foundDoors;
-        totalDoorBrushes = foundDoorBrushes;
-        totalTriggers = foundTriggers;
-        totalTriggerBrushes = foundTriggerBrushes;
-        totalTeleports = foundTeleports;
-        totalTeleportBrushes = foundTeleportBrushes;
-        totalDetails = foundDetails;
-        totalDetailBrushes = foundDetailBrushes;
-        totalGroups = foundGroups;
-        totalGroupBrushes = foundGroupBrushes;
-    }
-
-    int doors()
-    {
-        return totalDoors;
-    }
-
-    int details()
-    {
-        return totalDetails;
-    }
-
-    int groups()
-    {
-        return totalGroups;
-    }
-
-    int triggers()
-    {
-        return totalTriggers;
-    }
-
-    int teleports()
-    {
-        return totalTeleports;
-    }
-
-    int enemies()
-    {
-        return totalEnemies;
-    }
-
-    int entities()
-    {
-        return totalEntities;
-    }
-
-    int brushes()
-    {
-        return totalBrushes;
+        //Pass on the values of the local variables to the global ones, the local will be reset to 0
+        entities = foundEntities;
+        brushes = foundBrushes;
+        lights = foundLights;
+        enemies = foundEnemies;
+        doors = foundDoors;
+        doorBrushes = foundDoorBrushes;
+        triggers = foundTriggers;
+        triggerBrushes = foundTriggerBrushes;
+        teleports = foundTeleports;
+        teleportBrushes = foundTeleportBrushes;
+        details = foundDetails;
+        detailBrushes = foundDetailBrushes;
+        groups = foundGroups;
+        groupBrushes = foundGroupBrushes;
     }
 
     void run()
     {
-        mapFileLines = loadStrings(mapFilePath);
-
-        entityProcess();
-
         long start = millis();
 
+        mapFileLines = loadStrings(mapFilePath);
+        entityProcess();
         entityCount();
 
-        // println("Thread Process Time: " + (millis() - start));
+        println("Thread Process Time: " + (millis() - start));
     }
 }

@@ -16,6 +16,8 @@ void setup()
     selectInput("Select a .map file to process", "fileSelected");
 
     mapProcessor = new MapFileProcessor();
+
+    stroke(255);
 }
 
 //Will update once per frame, place your drawing routines here
@@ -31,13 +33,17 @@ void draw()
         //MAIN PROGRAM DRAW CODE GOES HERE
         if (mapProcessor.fileValidated)
         {
-            text("Triggers: " + mapProcessor.triggers() + "\n" +
-                 "Enemies: " + mapProcessor.enemies() + "\n" +
-                 "Details: " + mapProcessor.details() + "\n", width/8, height/8, width-width/5, height-height/5);
+            // text("Triggers: " + mapProcessor.triggers() + "\n" +
+            //      "Enemies: " + mapProcessor.enemies() + "\n" +
+            //      "Details: " + mapProcessor.details() + "\n", width/8, height/8, width-width/5, height-height/5);
+
+            line(width/2, 0, width/2, height);
+
+            line(0, height/4, width, height/4);
 
             if (frameCount % 90 == 0)
             {
-                // Kick off another run of the processing thread every ~1.5 seconds
+                // Kick off a run of the processing thread every ~1.5 seconds
                 Thread processThread = new Thread(mapProcessor);
                 processThread.start();
             }
