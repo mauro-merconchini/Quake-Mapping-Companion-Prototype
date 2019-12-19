@@ -9,10 +9,10 @@ class MapFileProcessor implements Runnable
 
     ArrayList<Entity> entityList;
 
-    int totalTriggers, totalEnemies, totalTeleports, totalDetails, 
-    totalGroups, totalLights, totalDoors, totalEntities, totalBrushes;
+    int totalTriggers, totalTriggerBrushes, totalEnemies, totalTeleports, totalTeleportBrushes, 
+    totalDetails, totalDetailBrushes, totalGroups, totalGroupBrushes, totalLights, totalDoors, 
+    totalDoorBrushes, totalEntities, totalBrushes;
 
-    //Empty constructor
     MapFileProcessor() { entityList = new ArrayList<Entity>(); }
 
     //Prints the path of the map file
@@ -92,45 +92,104 @@ class MapFileProcessor implements Runnable
         }
     }
 
-
-    // THIS NEEDS FIXING, ITS THROWING NULL POINTER EXCEPTIONS
+    //THIS NEEDS FIXING, IT's NOT RESETTING THE COUNTERS PROPERLY
     void entityCount()
     {
-        for (int i = 0; i < entityList.size() - 1; i++)
+        int foundTriggers = 0, foundTriggerBrushes = 0, foundEnemies = 0, foundTeleports = 0, 
+            foundTeleportBrushes = 0, foundDetails = 0, foundDetailBrushes = 0, foundGroups = 0, 
+            foundGroupBrushes = 0, foundLights = 0, foundDoors = 0, foundDoorBrushes = 0, 
+            foundEntities = 0, foundBrushes = 0;
+
+        //Checks for the different entity names and increments the corresponding counter
+        for (int i = 0; i < entityList.size(); i++)
         {
             String className = entityList.get(i).className();
 
-            // if (className.equals("func_door"))
-            // {
-            //     // println("found a door");
-            //     // totalDoors++;
-            // }
+            if (className.contains("func_door"))
+            {
+                foundDoors++;
+                foundDoorBrushes += entityList.get(i).brushCount();
+            }
 
-            // else if (className.contains("func_detail"))
-            // {
-            //     println("\nFOUND A MAP DETAIL\n");
-            //     totalDetails++;
-            // }
+            else if (className.contains("func_detail"))
+            {
+                foundDetails++;
+                foundDetailBrushes += entityList.get(i).brushCount();
+            }
 
-            // else if (className.contains("trigger_teleport"))
-            // {
-            //     totalTeleports++;
-            //     totalTriggers++;
-            // }
+            else if (className.contains("trigger_teleport"))
+            {
+                foundTeleports++;
+                foundTriggers++;
 
-            // else if (className.contains("trigger_"))
-            // {
-            //     totalTriggers++;
-            // }
+                foundTriggerBrushes += entityList.get(i).brushCount();
+                foundTeleportBrushes += entityList.get(i).brushCount();
+            }
 
-            // totalEntities++;
-            // totalBrushes += entityList.get(i).brushCount();
+            else if (className.contains("trigger_"))
+            {
+                foundTriggers++;
+                foundTriggerBrushes += entityList.get(i).brushCount();
+            }
+
+            else if (className.contains("monster_"))
+            {
+                foundEnemies++;
+            }
+
+            else if (className.contains("light"))
+            {
+                foundLights++;
+            }
+
+            foundEntities++;
+            foundBrushes += entityList.get(i).brushCount();
         }
+
+        totalEntities = foundEntities;
+        totalBrushes = foundBrushes;
+        totalLights = foundLights;
+        totalEnemies = foundEnemies;
+        totalDoors = foundDoors;
+        totalDoorBrushes = foundDoorBrushes;
+        totalTriggers = foundTriggers;
+        totalTriggerBrushes = foundTriggerBrushes;
+        totalTeleports = foundTeleports;
+        totalTeleportBrushes = foundTeleportBrushes;
+        totalDetails = foundDetails;
+        totalDetailBrushes = foundDetailBrushes;
+        totalGroups = foundGroups;
+        totalGroupBrushes = foundGroupBrushes;
     }
 
     int doors()
     {
         return totalDoors;
+    }
+
+    int details()
+    {
+        return totalDetails;
+    }
+
+    int groups()
+    {
+        return totalGroups;
+    }
+
+    int triggers()
+    {
+        return totalTriggers;
+    }
+
+    int teleports()
+    {
+        return totalTeleports;
+    }
+
+    int enemies()
+    {
+        return totalEnemies;
     }
 
     int entities()
@@ -145,12 +204,12 @@ class MapFileProcessor implements Runnable
 
     void run()
     {
-        long start = millis();
-        
         entityProcess();
+
+        long start = millis();
 
         entityCount();
 
-        println("Thread Process Time: " + (millis() - start));
+        // println("Thread Process Time: " + (millis() - start));
     }
 }

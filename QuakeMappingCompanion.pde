@@ -28,9 +28,24 @@ void draw()
     if (mapProcessor.fileLoaded)
     {
         //Only run the following code if the file has been validated to be a Trenchbroom Quake map file
+        //MAIN PROGRAM DRAW CODE GOES HERE
         if (mapProcessor.fileValidated)
         {
-            // println(mapProcessor.brushes());
+            text("Triggers: " + mapProcessor.triggers() + "\n" +
+                 "Enemies: " + mapProcessor.enemies() + "\n" +
+                 "Details: " + mapProcessor.details() + "\n", width/8, height/8, width-width/5, height-height/5);
+
+           if (frameCount % 90 == 0)
+            {
+                //Kick off another run of the processing thread every ~1.5 seconds
+                Thread processThread = new Thread(mapProcessor);
+                processThread.start();
+            }
+
+            if (mapProcessor.threadFinished())
+            {
+                mapProcessor.entityCount();
+            }
         }
 
         //The file must have loaded, but failed the verification
@@ -71,6 +86,6 @@ void fileSelected(File selection)
         
         //Kick off the first run of the processing thread
         Thread processThread = new Thread(mapProcessor);
-        processThread.start();        
+        processThread.start();   
     }
 }

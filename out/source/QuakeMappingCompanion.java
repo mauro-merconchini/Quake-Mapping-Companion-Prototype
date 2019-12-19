@@ -48,9 +48,24 @@ public void draw()
     if (mapProcessor.fileLoaded)
     {
         //Only run the following code if the file has been validated to be a Trenchbroom Quake map file
+        //MAIN PROGRAM DRAW CODE GOES HERE
         if (mapProcessor.fileValidated)
         {
-            // println(mapProcessor.brushes());
+            text("Triggers: " + mapProcessor.triggers() + "\n" +
+                 "Enemies: " + mapProcessor.enemies() + "\n" +
+                 "Details: " + mapProcessor.details() + "\n", width/8, height/8, width-width/5, height-height/5);
+
+           if (frameCount % 90 == 0)
+            {
+                //Kick off another run of the processing thread every ~1.5 seconds
+                Thread processThread = new Thread(mapProcessor);
+                processThread.start();
+            }
+
+            if (mapProcessor.threadFinished())
+            {
+                mapProcessor.entityCount();
+            }
         }
 
         //The file must have loaded, but failed the verification
@@ -91,7 +106,7 @@ public void fileSelected(File selection)
         
         //Kick off the first run of the processing thread
         Thread processThread = new Thread(mapProcessor);
-        processThread.start();        
+        processThread.start();   
     }
 }
 
@@ -197,12 +212,13 @@ class MapFileProcessor implements Runnable
     String mapFilePath;
     String mapFileLines[];
 
-    boolean fileLoaded, fileValidated;
+    boolean fileLoaded, fileValidated, threadFinished;
 
     ArrayList<Entity> entityList;
 
-    int totalTriggers, totalEnemies, totalTeleports, totalDetails, 
-    totalGroups, totalLights, totalDoors, totalEntities, totalBrushes;
+    int totalTriggers, totalTriggerBrushes, totalEnemies, totalTeleports, totalTeleportBrushes, 
+    totalDetails, totalDetailBrushes, totalGroups, totalGroupBrushes, totalLights, totalDoors, 
+    totalDoorBrushes, totalEntities, totalBrushes;
 
     //Empty constructor
     MapFileProcessor() { entityList = new ArrayList<Entity>(); }
@@ -284,53 +300,118 @@ class MapFileProcessor implements Runnable
         }
     }
 
-
-    // THIS NEEDS FIXING, ITS THROWING NULL POINTER EXCEPTIONS
+    // THIS NEEDS FIXING, IT's NOT RESETTING THE COUNTERS PROPERLY
     public void entityCount()
     {
-        PrintWriter classWriter = createWriter("output2.txt");
+        int foundTriggers = 0, foundTriggerBrushes = 0, foundEnemies = 0, foundTeleports = 0, 
+            foundTeleportBrushes = 0, foundDetails = 0, foundDetailBrushes = 0, foundGroups = 0, 
+            foundGroupBrushes = 0, foundLights = 0, foundDoors = 0, foundDoorBrushes = 0, 
+            foundEntities = 0, foundBrushes = 0;
 
-        for (int i = 0; i < entityList.size() - 1; i++)
+        for (int i = 0; i < entityList.size(); i++)
         {
             String className = entityList.get(i).className();
 
-            classWriter.println(className);
+            if (className.contains("func_door"))
+            {
+                foundDoors++;
+                foundDoorBrushes += entityList.get(i).brushCount();
+            }
 
-            // if (className.equals("func_door"))
-            // {
-            //     // println("found a door");
-            //     // totalDoors++;
-            // }
+            else if (className.contains("func_detail"))
+            {
+                foundDetails++;
+                foundDetailBrushes += entityList.get(i).brushCount();
+            }
 
-            // else if (className.contains("func_detail"))
-            // {
-            //     println("\nFOUND A MAP DETAIL\n");
-            //     totalDetails++;
-            // }
+            else if (className.contains("trigger_teleport"))
+            {
+                foundTeleports++;
+                foundTriggers++;
 
-            // else if (className.contains("trigger_teleport"))
-            // {
-            //     totalTeleports++;
-            //     totalTriggers++;
-            // }
+                foundTriggerBrushes += entityList.get(i).brushCount();
+                foundTeleportBrushes += entityList.get(i).brushCount();
+            }
 
-            // else if (className.contains("trigger_"))
-            // {
-            //     totalTriggers++;
-            // }
+            else if (className.contains("trigger_"))
+            {
+                foundTriggers++;
+                foundTriggerBrushes += entityList.get(i).brushCount();
+            }
 
-            // totalEntities++;
-            // totalBrushes += entityList.get(i).brushCount();
+            else if (className.contains("monster_"))
+            {
+                foundEnemies++;
+            }
+
+            else if (className.contains("light"))
+            {
+                foundLights++;
+            }
+
+            foundEntities++;
+            foundBrushes += entityList.get(i).brushCount();
         }
 
-        classWriter.close();
+        totalEntities = foundEntities;
+        totalBrushes = foundBrushes;
+        totalLights = foundLights;
+        totalEnemies = foundEnemies;
+        totalDoors = foundDoors;
+        totalDoorBrushes = foundDoorBrushes;
+        totalTriggers = foundTriggers;
+        totalTriggerBrushes = foundTriggerBrushes;
+        totalTeleports = foundTeleports;
+        totalTeleportBrushes = foundTeleportBrushes;
+        totalDetails = foundDetails;
+        totalDetailBrushes = foundDetailBrushes;
+        totalGroups = foundGroups;
+        totalGroupBrushes = foundGroupBrushes;
 
-        exit();
+        foundEntities = 0;
+        foundBrushes = 0;
+        foundLights = 0;
+        foundEnemies = 0;
+        foundDoors = 0;
+        foundDoorBrushes = 0;
+        foundTriggers = 0;
+        foundTriggerBrushes = 0;
+        foundTeleports = 0;
+        foundTeleportBrushes = 0;
+        foundDetails = 0;
+        foundDetailBrushes = 0;
+        foundGroups = 0;
+        foundGroupBrushes = 0;
     }
 
     public int doors()
     {
         return totalDoors;
+    }
+
+    public int details()
+    {
+        return totalDetails;
+    }
+
+    public int groups()
+    {
+        return totalGroups;
+    }
+
+    public int triggers()
+    {
+        return totalTriggers;
+    }
+
+    public int teleports()
+    {
+        return totalTeleports;
+    }
+
+    public int enemies()
+    {
+        return totalEnemies;
     }
 
     public int entities()
@@ -343,15 +424,45 @@ class MapFileProcessor implements Runnable
         return totalBrushes;
     }
 
+    public boolean threadFinished()
+    {
+        return threadFinished;
+    }
+
     public void run()
     {
-        long start = millis();
+        threadFinished = false;
         
         entityProcess();
 
-        entityCount();
+        long start = millis();
 
-        println("Thread Process Time: " + (millis() - start));
+        // entityCount();
+
+        // println("Thread Process Time: " + (millis() - start));
+
+        threadFinished = true;
+    }
+
+    //************************* TESTING PURPOSES ***************************************
+
+    public void testMethod()
+    {
+        int a = 0;
+
+        for (int i = 0; i < entityList.size(); i++)
+        {
+            if (entityList.get(i).className().equals("func_detail"))
+            {
+                a++;
+            }
+        }
+
+        totalDetails = a;
+
+        println(a);
+
+        a = 0;
     }
 }
 //A simple method to clear the screen on each frame, avoid ghosting
