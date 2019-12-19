@@ -98,13 +98,6 @@ public void fileSelected(File selection)
 
         //Load the map file into the processor object
         mapProcessor.loadFile(selection.getAbsolutePath());
-        
-        // if (mapProcessor.fileValidated)
-        // {
-        //     //Kick off the first run of the processing thread
-        //     Thread processThread = new Thread(mapProcessor);
-        //     processThread.start();   
-        // }
     }
 }
 
@@ -408,6 +401,8 @@ class MapFileProcessor implements Runnable
 
     public void run()
     {
+        mapFileLines = loadStrings(mapFilePath);
+
         entityProcess();
 
         long start = millis();

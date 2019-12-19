@@ -203,6 +203,8 @@ class MapFileProcessor implements Runnable
 
     void run()
     {
+        mapFileLines = loadStrings(mapFilePath);
+
         entityProcess();
 
         long start = millis();
