@@ -13,8 +13,6 @@ class MapFileProcessor implements Runnable
     totalDetails, totalDetailBrushes, totalGroups, totalGroupBrushes, totalLights, totalDoors, 
     totalDoorBrushes, totalEntities, totalBrushes;
 
-    MapFileProcessor() { entityList = new ArrayList<Entity>(); }
-
     //Prints the path of the map file
     String mapPath()
     {
@@ -55,6 +53,8 @@ class MapFileProcessor implements Runnable
         //Initialize a stack that will be used to determine when an entity ends
         Stack entityCurlyStack = new Stack();
 
+        entityList = new ArrayList<Entity>();
+
         //This loop scans through all the lines of the map file top to bottom
         for (int i = 0; i < mapFileLines.length; i++)
         {
@@ -92,7 +92,6 @@ class MapFileProcessor implements Runnable
         }
     }
 
-    //THIS NEEDS FIXING, IT's NOT RESETTING THE COUNTERS PROPERLY
     void entityCount()
     {
         int foundTriggers = 0, foundTriggerBrushes = 0, foundEnemies = 0, foundTeleports = 0, 

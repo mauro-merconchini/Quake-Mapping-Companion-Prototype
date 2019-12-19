@@ -35,9 +35,9 @@ void draw()
                  "Enemies: " + mapProcessor.enemies() + "\n" +
                  "Details: " + mapProcessor.details() + "\n", width/8, height/8, width-width/5, height-height/5);
 
-           if (frameCount % 90 == 0)
+            if (frameCount % 90 == 0)
             {
-                //Kick off another run of the processing thread every ~1.5 seconds
+                // Kick off another run of the processing thread every ~1.5 seconds
                 Thread processThread = new Thread(mapProcessor);
                 processThread.start();
             }
@@ -78,9 +78,5 @@ void fileSelected(File selection)
 
         //Load the map file into the processor object
         mapProcessor.loadFile(selection.getAbsolutePath());
-        
-        //Kick off the first run of the processing thread
-        Thread processThread = new Thread(mapProcessor);
-        processThread.start();   
     }
 }

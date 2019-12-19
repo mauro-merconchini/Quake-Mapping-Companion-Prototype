@@ -55,16 +55,11 @@ public void draw()
                  "Enemies: " + mapProcessor.enemies() + "\n" +
                  "Details: " + mapProcessor.details() + "\n", width/8, height/8, width-width/5, height-height/5);
 
-           if (frameCount % 90 == 0)
+            if (frameCount % 90 == 0)
             {
-                //Kick off another run of the processing thread every ~1.5 seconds
+                // Kick off another run of the processing thread every ~1.5 seconds
                 Thread processThread = new Thread(mapProcessor);
                 processThread.start();
-            }
-
-            if (mapProcessor.threadFinished())
-            {
-                mapProcessor.entityCount();
             }
         }
 
@@ -104,9 +99,12 @@ public void fileSelected(File selection)
         //Load the map file into the processor object
         mapProcessor.loadFile(selection.getAbsolutePath());
         
-        //Kick off the first run of the processing thread
-        Thread processThread = new Thread(mapProcessor);
-        processThread.start();   
+        // if (mapProcessor.fileValidated)
+        // {
+        //     //Kick off the first run of the processing thread
+        //     Thread processThread = new Thread(mapProcessor);
+        //     processThread.start();   
+        // }
     }
 }
 
@@ -220,8 +218,6 @@ class MapFileProcessor implements Runnable
     totalDetails, totalDetailBrushes, totalGroups, totalGroupBrushes, totalLights, totalDoors, 
     totalDoorBrushes, totalEntities, totalBrushes;
 
-    MapFileProcessor() { entityList = new ArrayList<Entity>(); }
-
     //Prints the path of the map file
     public String mapPath()
     {
@@ -262,6 +258,8 @@ class MapFileProcessor implements Runnable
         //Initialize a stack that will be used to determine when an entity ends
         Stack entityCurlyStack = new Stack();
 
+        entityList = new ArrayList<Entity>();
+
         //This loop scans through all the lines of the map file top to bottom
         for (int i = 0; i < mapFileLines.length; i++)
         {
@@ -299,7 +297,6 @@ class MapFileProcessor implements Runnable
         }
     }
 
-    //THIS NEEDS FIXING, IT's NOT RESETTING THE COUNTERS PROPERLY
     public void entityCount()
     {
         int foundTriggers = 0, foundTriggerBrushes = 0, foundEnemies = 0, foundTeleports = 0, 
