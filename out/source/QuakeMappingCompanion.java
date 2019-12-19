@@ -212,7 +212,7 @@ class MapFileProcessor implements Runnable
     String mapFilePath;
     String mapFileLines[];
 
-    boolean fileLoaded, fileValidated, threadFinished;
+    boolean fileLoaded, fileValidated;
 
     ArrayList<Entity> entityList;
 
@@ -220,7 +220,6 @@ class MapFileProcessor implements Runnable
     totalDetails, totalDetailBrushes, totalGroups, totalGroupBrushes, totalLights, totalDoors, 
     totalDoorBrushes, totalEntities, totalBrushes;
 
-    //Empty constructor
     MapFileProcessor() { entityList = new ArrayList<Entity>(); }
 
     //Prints the path of the map file
@@ -300,7 +299,7 @@ class MapFileProcessor implements Runnable
         }
     }
 
-    // THIS NEEDS FIXING, IT's NOT RESETTING THE COUNTERS PROPERLY
+    //THIS NEEDS FIXING, IT's NOT RESETTING THE COUNTERS PROPERLY
     public void entityCount()
     {
         int foundTriggers = 0, foundTriggerBrushes = 0, foundEnemies = 0, foundTeleports = 0, 
@@ -308,6 +307,7 @@ class MapFileProcessor implements Runnable
             foundGroupBrushes = 0, foundLights = 0, foundDoors = 0, foundDoorBrushes = 0, 
             foundEntities = 0, foundBrushes = 0;
 
+        //Checks for the different entity names and increments the corresponding counter
         for (int i = 0; i < entityList.size(); i++)
         {
             String className = entityList.get(i).className();
@@ -367,21 +367,6 @@ class MapFileProcessor implements Runnable
         totalDetailBrushes = foundDetailBrushes;
         totalGroups = foundGroups;
         totalGroupBrushes = foundGroupBrushes;
-
-        foundEntities = 0;
-        foundBrushes = 0;
-        foundLights = 0;
-        foundEnemies = 0;
-        foundDoors = 0;
-        foundDoorBrushes = 0;
-        foundTriggers = 0;
-        foundTriggerBrushes = 0;
-        foundTeleports = 0;
-        foundTeleportBrushes = 0;
-        foundDetails = 0;
-        foundDetailBrushes = 0;
-        foundGroups = 0;
-        foundGroupBrushes = 0;
     }
 
     public int doors()
@@ -424,45 +409,15 @@ class MapFileProcessor implements Runnable
         return totalBrushes;
     }
 
-    public boolean threadFinished()
-    {
-        return threadFinished;
-    }
-
     public void run()
     {
-        threadFinished = false;
-        
         entityProcess();
 
         long start = millis();
 
-        // entityCount();
+        entityCount();
 
         // println("Thread Process Time: " + (millis() - start));
-
-        threadFinished = true;
-    }
-
-    //************************* TESTING PURPOSES ***************************************
-
-    public void testMethod()
-    {
-        int a = 0;
-
-        for (int i = 0; i < entityList.size(); i++)
-        {
-            if (entityList.get(i).className().equals("func_detail"))
-            {
-                a++;
-            }
-        }
-
-        totalDetails = a;
-
-        println(a);
-
-        a = 0;
     }
 }
 //A simple method to clear the screen on each frame, avoid ghosting

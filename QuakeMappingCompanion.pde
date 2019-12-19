@@ -41,11 +41,6 @@ void draw()
                 Thread processThread = new Thread(mapProcessor);
                 processThread.start();
             }
-
-            if (mapProcessor.threadFinished())
-            {
-                mapProcessor.entityCount();
-            }
         }
 
         //The file must have loaded, but failed the verification
