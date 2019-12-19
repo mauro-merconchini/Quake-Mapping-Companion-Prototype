@@ -2,7 +2,7 @@ import java.util.Stack;
 
 class MapFileProcessor implements Runnable
 {
-    String mapFilePath;
+    String mapFilePath, mapFileName, mapFileMessage;
     String mapFileLines[];
 
     boolean fileLoaded, fileValidated;
@@ -11,12 +11,6 @@ class MapFileProcessor implements Runnable
 
     int triggers, triggerBrushes, enemies,teleports, teleportBrushes, details, detailBrushes, 
     groups, groupBrushes, lights, doors, doorBrushes, entities, brushes;
-
-    //Prints the path of the map file
-    String mapPath()
-    {
-        return mapFilePath;
-    }
 
     //Takes care of loading the file, calling a validating helper method, and writing the array of lines
     void loadFile(String path)
@@ -38,8 +32,22 @@ class MapFileProcessor implements Runnable
             if (mapFileLines[0].equals("// Game: Quake"))
             {
                 fileValidated = true;
+
+                mapFileName = setMapName();
             }
         }
+    }
+
+    String setMapName()
+    {
+        if (mapFilePath.contains("\\"))
+        {
+            String[] tokenizedPath = split(mapFilePath, '\\');
+
+            return tokenizedPath[tokenizedPath.length - 1];
+        }
+
+        else return mapFilePath;
     }
     
     //Scans the file for entities, creates the entity objects, and adds them to the list

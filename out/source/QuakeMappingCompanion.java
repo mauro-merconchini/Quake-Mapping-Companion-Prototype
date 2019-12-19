@@ -107,6 +107,11 @@ public void fileSelected(File selection)
     }
 }
 
+public void mousePressed()
+{
+    println(mapProcessor.mapFileName);
+}
+
 
 
 class Entity
@@ -206,22 +211,15 @@ class Entity
 
 class MapFileProcessor implements Runnable
 {
-    String mapFilePath;
+    String mapFilePath, mapFileName, mapFileMessage;
     String mapFileLines[];
 
     boolean fileLoaded, fileValidated;
 
     ArrayList<Entity> entityList;
 
-    int totalTriggers, totalTriggerBrushes, totalEnemies, totalTeleports, totalTeleportBrushes, 
-    totalDetails, totalDetailBrushes, totalGroups, totalGroupBrushes, totalLights, totalDoors, 
-    totalDoorBrushes, totalEntities, totalBrushes;
-
-    //Prints the path of the map file
-    public String mapPath()
-    {
-        return mapFilePath;
-    }
+    int triggers, triggerBrushes, enemies,teleports, teleportBrushes, details, detailBrushes, 
+    groups, groupBrushes, lights, doors, doorBrushes, entities, brushes;
 
     //Takes care of loading the file, calling a validating helper method, and writing the array of lines
     public void loadFile(String path)
@@ -243,8 +241,22 @@ class MapFileProcessor implements Runnable
             if (mapFileLines[0].equals("// Game: Quake"))
             {
                 fileValidated = true;
+
+                mapFileName = setMapName();
             }
         }
+    }
+
+    public String setMapName()
+    {
+        if (mapFilePath.contains("\\"))
+        {
+            String[] tokenizedPath = split(mapFilePath, '\\');
+
+            return tokenizedPath[tokenizedPath.length - 1];
+        }
+
+        else return mapFilePath;
     }
     
     //Scans the file for entities, creates the entity objects, and adds them to the list
@@ -257,6 +269,7 @@ class MapFileProcessor implements Runnable
         //Initialize a stack that will be used to determine when an entity ends
         Stack entityCurlyStack = new Stack();
 
+        //Prepare the Entity ArrayList
         entityList = new ArrayList<Entity>();
 
         //This loop scans through all the lines of the map file top to bottom
@@ -349,60 +362,21 @@ class MapFileProcessor implements Runnable
             foundBrushes += entityList.get(i).brushCount();
         }
 
-        totalEntities = foundEntities;
-        totalBrushes = foundBrushes;
-        totalLights = foundLights;
-        totalEnemies = foundEnemies;
-        totalDoors = foundDoors;
-        totalDoorBrushes = foundDoorBrushes;
-        totalTriggers = foundTriggers;
-        totalTriggerBrushes = foundTriggerBrushes;
-        totalTeleports = foundTeleports;
-        totalTeleportBrushes = foundTeleportBrushes;
-        totalDetails = foundDetails;
-        totalDetailBrushes = foundDetailBrushes;
-        totalGroups = foundGroups;
-        totalGroupBrushes = foundGroupBrushes;
-    }
-
-    public int doors()
-    {
-        return totalDoors;
-    }
-
-    public int details()
-    {
-        return totalDetails;
-    }
-
-    public int groups()
-    {
-        return totalGroups;
-    }
-
-    public int triggers()
-    {
-        return totalTriggers;
-    }
-
-    public int teleports()
-    {
-        return totalTeleports;
-    }
-
-    public int enemies()
-    {
-        return totalEnemies;
-    }
-
-    public int entities()
-    {
-        return totalEntities;
-    }
-
-    public int brushes()
-    {
-        return totalBrushes;
+        //Pass on the values of the local variables to the global ones, the local will be reset to 0
+        entities = foundEntities;
+        brushes = foundBrushes;
+        lights = foundLights;
+        enemies = foundEnemies;
+        doors = foundDoors;
+        doorBrushes = foundDoorBrushes;
+        triggers = foundTriggers;
+        triggerBrushes = foundTriggerBrushes;
+        teleports = foundTeleports;
+        teleportBrushes = foundTeleportBrushes;
+        details = foundDetails;
+        detailBrushes = foundDetailBrushes;
+        groups = foundGroups;
+        groupBrushes = foundGroupBrushes;
     }
 
     public void run()
