@@ -9,8 +9,8 @@ class MapFileProcessor implements Runnable
 
     ArrayList<Entity> entityList;
 
-    int triggers, triggerBrushes, enemies,teleports, teleportBrushes, details, detailBrushes, 
-    groups, groupBrushes, lights, doors, doorBrushes, entities, brushes;
+    int triggers, triggerBrushes, enemies, teleports, teleportBrushes, details, detailBrushes, 
+    groups, groupBrushes, lights, doors, doorBrushes, items, entities, brushes, worldspawnBrushes;
 
     //Takes care of loading the file, calling a validating helper method, and writing the array of lines
     void loadFile(String path)
@@ -105,7 +105,7 @@ class MapFileProcessor implements Runnable
         int foundTriggers = 0, foundTriggerBrushes = 0, foundEnemies = 0, foundTeleports = 0, 
             foundTeleportBrushes = 0, foundDetails = 0, foundDetailBrushes = 0, foundGroups = 0, 
             foundGroupBrushes = 0, foundLights = 0, foundDoors = 0, foundDoorBrushes = 0, 
-            foundEntities = 0, foundBrushes = 0;
+            foundEntities = 0, foundBrushes = 0, foundItems = 0, foundWorldspawnBrushes = 0;
 
         //Checks for the different entity names and increments the corresponding counter
         for (int i = 0; i < entityList.size(); i++)
@@ -116,6 +116,11 @@ class MapFileProcessor implements Runnable
             {
                 foundDoors++;
                 foundDoorBrushes += entityList.get(i).brushCount();
+            }
+
+            else if (className.contains("worldspawn"))
+            {
+                foundWorldspawnBrushes += entityList.get(i).brushCount();
             }
 
             else if (className.contains("func_detail"))
@@ -139,6 +144,12 @@ class MapFileProcessor implements Runnable
                 foundTriggerBrushes += entityList.get(i).brushCount();
             }
 
+            else if (className.contains("group"))
+            {
+                foundGroups++;
+                foundGroupBrushes += entityList.get(i).brushCount();
+            }
+
             else if (className.contains("monster_"))
             {
                 foundEnemies++;
@@ -147,6 +158,11 @@ class MapFileProcessor implements Runnable
             else if (className.contains("light"))
             {
                 foundLights++;
+            }
+
+            else if (className.contains("item_"))
+            {
+                foundItems++;
             }
 
             foundEntities++;
@@ -168,16 +184,14 @@ class MapFileProcessor implements Runnable
         detailBrushes = foundDetailBrushes;
         groups = foundGroups;
         groupBrushes = foundGroupBrushes;
+        items = foundItems;
+        worldspawnBrushes = foundWorldspawnBrushes;
     }
 
     void run()
     {
-        long start = millis();
-
         mapFileLines = loadStrings(mapFilePath);
         entityProcess();
         entityCount();
-
-        println("Thread Process Time: " + (millis() - start));
     }
 }

@@ -5,9 +5,9 @@ void cls()
 }
 
 //This sets up the font that will be used for displaying text
-void fontSetup()
+void fontSetup(int dividend)
 {
     //Load the font used for writing text
-    alata = createFont("data/Alata-Regular.ttf", width/10);
+    alata = createFont("data/Alata-Regular.ttf", width/dividend);
     textFont(alata);
 }

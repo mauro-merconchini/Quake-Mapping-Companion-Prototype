@@ -30,7 +30,9 @@ public void setup()
     //This makes sure that the window can be resized, both in 2D and 3D
     surface.setResizable(true);
 
-    //Initialize a 3D window for text and graphics to be displayed
+    rectMode(CENTER);
+
+    //Initialize a window for text and graphics to be displayed
     
 
     selectInput("Select a .map file to process", "fileSelected");
@@ -44,7 +46,9 @@ public void setup()
 public void draw()
 {
     cls();
-    fontSetup();
+    fontSetup(12);
+
+    // println(pootis());
 
     //Only run the following code if a file has been loaded
     if (mapProcessor.fileLoaded)
@@ -53,15 +57,73 @@ public void draw()
         //MAIN PROGRAM DRAW CODE GOES HERE
         if (mapProcessor.fileValidated)
         {
-            // text("Triggers: " + mapProcessor.triggers() + "\n" +
-            //      "Enemies: " + mapProcessor.enemies() + "\n" +
-            //      "Details: " + mapProcessor.details() + "\n", width/8, height/8, width-width/5, height-height/5);
+            fontSetup(30);
+            
+            textAlign(CENTER);
+            text(mapProcessor.mapFileName, width/2, height/10, width/2, height/7);
 
-            line(width/2, 0, width/2, height);
+            textAlign(CENTER);
+            text("ENTITIES", width/4, height/8, width/4, height/15);
+            text("BRUSHES", (width/4 + width/2), height/8, width/4, height/15);
 
-            line(0, height/4, width, height/4);
+            //These lines are the division segments in the program window
+            line (0, height/6.5f, width, height/6.5f);
+            line(width/2, height/6.5f, width/2, height);
 
-            if (frameCount % 90 == 0)
+            //********************E N T I T I E S*************************************************
+            
+            //These text methods set up the drawing of names of the entity groups
+            textAlign(LEFT);
+            text("Enemies", width/8, height/5, width/4.8f, height/15);
+            text("Doors", width/8, ((height/5 + (height/15 + height/40) * 1)), width/4.8f, height/15);
+            text("Lights", width/8, ((height/5 + (height/15 + height/40) * 2)), width/4.8f, height/15);
+            text("Items", width/8, ((height/5 + (height/15 + height/40) * 3)), width/4.8f, height/15);
+            text("Details", width/8, ((height/5 + (height/15 + height/40) * 4)), width/4.8f, height/15);
+            text("Groups", width/8, ((height/5 + (height/15 + height/40) * 5)), width/4.8f, height/15);
+            text("Triggers", width/8, ((height/5 + (height/15 + height/40) * 6)), width/4.8f, height/15);
+            text("Teleports", width/8, ((height/5 + (height/15 + height/40) * 7)), width/4.8f, height/15);
+            text("Total", width/8, ((height/5 + (height/15 + height/40) * 8)), width/4.8f, height/15);
+
+            //These text methods set up the drawing of entity numeric data
+            textAlign(RIGHT);
+            text("" + mapProcessor.enemies, (width/8 + width/4.2f), height/5, width/4.2f, height/15);
+            text("" + mapProcessor.doors, (width/8 + width/4.2f), ((height/5 + (height/15 + height/40) * 1)), width/4.2f, height/15);
+            text("" + mapProcessor.lights, (width/8 + width/4.2f), ((height/5 + (height/15 + height/40) * 2)), width/4.2f, height/15);
+            text("" + mapProcessor.items, (width/8 + width/4.2f), ((height/5 + (height/15 + height/40) * 3)), width/4.2f, height/15);
+            text("" + mapProcessor.details, (width/8 + width/4.2f), ((height/5 + (height/15 + height/40) * 4)), width/4.2f, height/15);
+            text("" + mapProcessor.groups, (width/8 + width/4.2f), ((height/5 + (height/15 + height/40) * 5)), width/4.2f, height/15);
+            text("" + mapProcessor.triggers, (width/8 + width/4.2f), ((height/5 + (height/15 + height/40) * 6)), width/4.2f, height/15);
+            text("" + mapProcessor.teleports, (width/8 + width/4.2f), ((height/5 + (height/15 + height/40) * 7)), width/4.2f, height/15);
+            text("" + mapProcessor.entities, (width/8 + width/4.2f), ((height/5 + (height/15 + height/40) * 8)), width/4.2f, height/15);
+            
+            //********************B R U S H E S*************************************************
+
+            //These text methods set up the drawing of names of brush types
+            textAlign(LEFT);
+            text("World Spawn", (width/8 + width/2), height/5, width/4.8f, height/15);
+            text("Doors", (width/8 + width/2), ((height/5 + (height/15 + height/40) * 1)), width/4.8f, height/15);
+            text("Details", (width/8 + width/2), ((height/5 + (height/15 + height/40) * 2)), width/4.8f, height/15);
+            text("Groups", (width/8 + width/2), ((height/5 + (height/15 + height/40) * 3)), width/4.8f, height/15);
+            text("Triggers", (width/8 + width/2), ((height/5 + (height/15 + height/40) * 4)), width/4.8f, height/15);
+            text("Teleports", (width/8 + width/2), ((height/5 + (height/15 + height/40) * 5)), width/4.8f, height/15);
+            text("", (width/8 + width/2), ((height/5 + (height/15 + height/40) * 6)), width/4.8f, height/15);
+            text("", (width/8 + width/2), ((height/5 + (height/15 + height/40) * 7)), width/4.8f, height/15);
+            text("Total", (width/8 + width/2), ((height/5 + (height/15 + height/40) * 8)), width/4.8f, height/15);
+            
+            //These text methods set up the drawing of brush numeric data
+            textAlign(RIGHT);
+            text("" + mapProcessor.worldspawnBrushes, ((width/8 + width/4.2f) + width/2), height/5, width/4.2f, height/15);
+            text("" + mapProcessor.doorBrushes, ((width/8 + width/4.2f) + width/2), ((height/5 + (height/15 + height/40) * 1)), width/4.2f, height/15);
+            text("" + mapProcessor.detailBrushes, ((width/8 + width/4.2f) + width/2), ((height/5 + (height/15 + height/40) * 2)), width/4.2f, height/15);
+            text("" + mapProcessor.groupBrushes, ((width/8 + width/4.2f) + width/2), ((height/5 + (height/15 + height/40) * 3)), width/4.2f, height/15);
+            text("" + mapProcessor.triggerBrushes, ((width/8 + width/4.2f) + width/2), ((height/5 + (height/15 + height/40) * 4)), width/4.2f, height/15);
+            text("" + mapProcessor.teleportBrushes, ((width/8 + width/4.2f) + width/2), ((height/5 + (height/15 + height/40) * 5)), width/4.2f, height/15);
+            text("", ((width/8 + width/4.2f) + width/2), ((height/5 + (height/15 + height/40) * 6)), width/4.2f, height/15);
+            text("", ((width/8 + width/4.2f) + width/2), ((height/5 + (height/15 + height/40) * 7)), width/4.2f, height/15);
+            text("" + mapProcessor.brushes, ((width/8 + width/4.2f) + width/2), ((height/5 + (height/15 + height/40) * 8)), width/4.2f, height/15);
+
+            //Create a new thread to re-scan the file and refresh data every ~0.75 seconds
+            if (frameCount % 45 == 0)
             {
                 // Kick off a run of the processing thread every ~1.5 seconds
                 Thread processThread = new Thread(mapProcessor);
@@ -73,15 +135,15 @@ public void draw()
         else
         {
             textAlign(CENTER);
-            text("FILE NOT VALIDATED!", width/8, height/8, width-width/5, height-height/5);
+            text("FILE NOT VALIDATED!", width/2, height/2);
         }
     }
 
     //No file has been loaded, or the file loaded was not a map file
     else
     {
-        textAlign(CENTER);
-        text("NO MAP FILE LOADED!", width/8, height/8, width-width/5, height-height/5);
+        textAlign(CENTER);       
+        text("NO MAP FILE LOADED!", width/2, height/2);
     }
 }
 
@@ -105,11 +167,6 @@ public void fileSelected(File selection)
         //Load the map file into the processor object
         mapProcessor.loadFile(selection.getAbsolutePath());
     }
-}
-
-public void mousePressed()
-{
-    println(mapProcessor.mapFileName);
 }
 
 
@@ -218,8 +275,8 @@ class MapFileProcessor implements Runnable
 
     ArrayList<Entity> entityList;
 
-    int triggers, triggerBrushes, enemies,teleports, teleportBrushes, details, detailBrushes, 
-    groups, groupBrushes, lights, doors, doorBrushes, entities, brushes;
+    int triggers, triggerBrushes, enemies, teleports, teleportBrushes, details, detailBrushes, 
+    groups, groupBrushes, lights, doors, doorBrushes, items, entities, brushes, worldspawnBrushes;
 
     //Takes care of loading the file, calling a validating helper method, and writing the array of lines
     public void loadFile(String path)
@@ -314,7 +371,7 @@ class MapFileProcessor implements Runnable
         int foundTriggers = 0, foundTriggerBrushes = 0, foundEnemies = 0, foundTeleports = 0, 
             foundTeleportBrushes = 0, foundDetails = 0, foundDetailBrushes = 0, foundGroups = 0, 
             foundGroupBrushes = 0, foundLights = 0, foundDoors = 0, foundDoorBrushes = 0, 
-            foundEntities = 0, foundBrushes = 0;
+            foundEntities = 0, foundBrushes = 0, foundItems = 0, foundWorldspawnBrushes = 0;
 
         //Checks for the different entity names and increments the corresponding counter
         for (int i = 0; i < entityList.size(); i++)
@@ -325,6 +382,11 @@ class MapFileProcessor implements Runnable
             {
                 foundDoors++;
                 foundDoorBrushes += entityList.get(i).brushCount();
+            }
+
+            else if (className.contains("worldspawn"))
+            {
+                foundWorldspawnBrushes += entityList.get(i).brushCount();
             }
 
             else if (className.contains("func_detail"))
@@ -348,6 +410,12 @@ class MapFileProcessor implements Runnable
                 foundTriggerBrushes += entityList.get(i).brushCount();
             }
 
+            else if (className.contains("group"))
+            {
+                foundGroups++;
+                foundGroupBrushes += entityList.get(i).brushCount();
+            }
+
             else if (className.contains("monster_"))
             {
                 foundEnemies++;
@@ -356,6 +424,11 @@ class MapFileProcessor implements Runnable
             else if (className.contains("light"))
             {
                 foundLights++;
+            }
+
+            else if (className.contains("item_"))
+            {
+                foundItems++;
             }
 
             foundEntities++;
@@ -377,17 +450,15 @@ class MapFileProcessor implements Runnable
         detailBrushes = foundDetailBrushes;
         groups = foundGroups;
         groupBrushes = foundGroupBrushes;
+        items = foundItems;
+        worldspawnBrushes = foundWorldspawnBrushes;
     }
 
     public void run()
     {
-        long start = millis();
-
         mapFileLines = loadStrings(mapFilePath);
         entityProcess();
         entityCount();
-
-        println("Thread Process Time: " + (millis() - start));
     }
 }
 //A simple method to clear the screen on each frame, avoid ghosting
@@ -397,10 +468,10 @@ public void cls()
 }
 
 //This sets up the font that will be used for displaying text
-public void fontSetup()
+public void fontSetup(int dividend)
 {
     //Load the font used for writing text
-    alata = createFont("data/Alata-Regular.ttf", width/10);
+    alata = createFont("data/Alata-Regular.ttf", width/dividend);
     textFont(alata);
 }
   public void settings() {  size(800, 600); }
