@@ -57,14 +57,14 @@ public void draw()
         //MAIN PROGRAM DRAW CODE GOES HERE
         if (mapProcessor.fileValidated)
         {
-            fontSetup(30);
+            fontSetup(24);
             
             textAlign(CENTER);
-            text(mapProcessor.mapFileName, width/2, height/10, width/2, height/7);
+            text(mapProcessor.mapFileName, width/2, height/10, width, height/7);
 
             textAlign(CENTER);
-            text("ENTITIES", width/4, height/8, width/4, height/15);
-            text("BRUSHES", (width/4 + width/2), height/8, width/4, height/15);
+            text("ENTITIES", width/4, height/8, width/2, height/15);
+            text("BRUSHES", (width/4 + width/2), height/8, width/2, height/15);
 
             //These lines are the division segments in the program window
             line (0, height/6.5f, width, height/6.5f);
@@ -100,7 +100,7 @@ public void draw()
 
             //These text methods set up the drawing of names of brush types
             textAlign(LEFT);
-            text("World Spawn", (width/8 + width/2), height/5, width/4.8f, height/15);
+            text("World", (width/8 + width/2), height/5, width/4.8f, height/15);
             text("Doors", (width/8 + width/2), ((height/5 + (height/15 + height/40) * 1)), width/4.8f, height/15);
             text("Details", (width/8 + width/2), ((height/5 + (height/15 + height/40) * 2)), width/4.8f, height/15);
             text("Groups", (width/8 + width/2), ((height/5 + (height/15 + height/40) * 3)), width/4.8f, height/15);
@@ -471,7 +471,7 @@ public void cls()
 public void fontSetup(int dividend)
 {
     //Load the font used for writing text
-    alata = createFont("data/Alata-Regular.ttf", width/dividend);
+    alata = createFont("data/Alata-Regular.ttf", height/dividend);
     textFont(alata);
 }
   public void settings() {  size(800, 600); }

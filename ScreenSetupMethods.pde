@@ -8,6 +8,6 @@ void cls()
 void fontSetup(int dividend)
 {
     //Load the font used for writing text
-    alata = createFont("data/Alata-Regular.ttf", width/dividend);
+    alata = createFont("data/Alata-Regular.ttf", height/dividend);
     textFont(alata);
 }
